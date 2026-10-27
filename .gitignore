@@ -1,0 +1,26 @@
+# Dependencies & build outputs
+node_modules/
+.vercel/
+.tools/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Operating System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs & temp files
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Editor / IDE settings
+.idea/
+.vscode/
+*.swp
+*.swo

@@ -1,0 +1,2144 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LunaRay — Interactive Scroll Animation & Creative Studio</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✨</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config={darkMode:"class",theme:{extend:{colors:{"tertiary-fixed":"#e7defd","error-container":"#93000a","on-tertiary":"#322d45","on-primary-fixed-variant":"#483b87","on-secondary-container":"#dba6bd","inverse-surface":"#e4e1ed","outline-variant":"#484550","on-error":"#690005","primary-container":"#a99bef","surface-container":"#1f1f27","on-surface":"#e4e1ed","surface-container-lowest":"#0d0d15","on-surface-variant":"#c9c4d2","surface-container-highest":"#34343d","inverse-primary":"#6053a1","tertiary":"#cbc2e0","on-tertiary-fixed-variant":"#49435c","surface-tint":"#cabeff","on-secondary-fixed-variant":"#633a4d","surface-variant":"#34343d","secondary-container":"#633a4d","tertiary-container":"#aaa2bf","outline":"#938f9c","primary":"#cabeff","secondary-fixed":"#ffd8e7","on-primary-container":"#3d2f7b","background":"#13131b","primary-fixed-dim":"#cabeff","on-primary":"#31226f","on-secondary-fixed":"#311021","surface-container-high":"#292932","secondary-fixed-dim":"#eeb7ce","secondary":"#eeb7ce","primary-fixed":"#e6deff","surface-bright":"#393841","surface-dim":"#13131b","on-error-container":"#ffdad6","inverse-on-surface":"#303038","on-primary-fixed":"#1c065b","tertiary-fixed-dim":"#cbc2e0","on-background":"#e4e1ed","on-tertiary-fixed":"#1d182f","surface":"#13131b","error":"#ffb4ab","on-secondary":"#492437","on-tertiary-container":"#3e3850","surface-container-low":"#1b1b23"},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"space-md":"0.75rem","space-xl":"2rem","space-sm":"0.5rem","space-lg":"1.25rem","gutter":"0.75rem","space-xs":"0.25rem","margin":"1rem"},fontFamily:{"display-lg-mobile":["Space Grotesk"],"body-lg":["Plus Jakarta Sans"],"display-lg":["Space Grotesk"],"body-sm":["Plus Jakarta Sans"],"body-md":["Plus Jakarta Sans"],"code-timecode":["JetBrains Mono"],"headline-lg":["Space Grotesk"],"headline-lg-mobile":["Space Grotesk"],"label-sm":["JetBrains Mono"],"headline-md":["Space Grotesk"]},fontSize:{"display-lg-mobile":["32px",{"lineHeight":"40px","fontWeight":"700"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"display-lg":["48px",{"lineHeight":"56px","fontWeight":"700"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"code-timecode":["14px",{"lineHeight":"18px","letterSpacing":"0.05em","fontWeight":"600"}],"headline-lg":["32px",{"lineHeight":"40px","fontWeight":"600"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","fontWeight":"600"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"500"}],"headline-md":["22px",{"lineHeight":"28px","fontWeight":"600"}]}}}}
+  </script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="is-loading bg-surface text-on-surface font-body-md text-body-md antialiased selection:bg-primary-container selection:text-on-primary-container">
+
+  <!-- Preloader Screen -->
+  <div id="preloader" class="preloader">
+    <div class="preloader-content">
+      <div class="preloader-brand">
+        <div class="brand-spark"></div>
+        <span class="brand-name">LunaRay</span>
+      </div>
+      <div class="progress-bar-container">
+        <div id="progressBar" class="progress-bar"></div>
+      </div>
+      <div class="progress-stats">
+        <span id="loadPercent">0%</span>
+        <span id="loadCount">0 / 180</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header Navigation -->
+  <div id="top"></div>
+  <!-- Transparent Sticky Navigation Bar -->
+  <header id="siteHeader" class="site-header">
+    <div class="header-inner">
+      <!-- LunaRay Brand Logo -->
+      <a href="#top" class="brand-badge" title="Scroll to Top">
+        <span class="status-indicator"></span>
+        <span class="brand-title">LunaRay</span>
+        <span class="brand-tag">STUDIO</span>
+      </a>
+
+      <!-- Essential Controls -->
+      <div class="header-actions">
+        <!-- Ambient Lofi Synth Toggle -->
+        <button id="audioToggle" class="icon-btn" title="Toggle Ambience">
+          <svg class="icon audio-off-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+          <svg class="icon audio-on-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+          <span class="btn-text">Ambience</span>
+        </button>
+
+        <!-- Fullscreen Toggle -->
+        <button id="fullscreenToggle" class="icon-btn" title="Toggle Fullscreen">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sticky Viewport Stage with Fixed Canvas -->
+  <div id="stickyStage" class="sticky-stage">
+    <!-- Clean, Full-Fidelity Background Canvas -->
+    <canvas id="frameCanvas"></canvas>
+
+
+    <!-- Hero Title Overlay (Fades out by 30% scroll) -->
+    <div id="heroTextOverlay" class="hero-text-overlay">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-high/80 backdrop-blur-md border border-white/10 text-primary font-label-sm text-label-sm uppercase tracking-widest shadow-lg mb-4">
+        <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+        <span>CREATIVE STUDIO</span>
+      </div>
+      <h1 class="hero-heading font-display-lg text-4xl sm:text-6xl lg:text-7xl font-bold uppercase tracking-tight text-on-surface leading-none drop-shadow-2xl">
+        VIDEO <span class="text-primary">EDITOR</span>
+      </h1>
+      <p class="hero-subheading font-body-lg text-base sm:text-lg lg:text-xl text-on-surface-variant max-w-xl mx-auto mt-4 drop-shadow-md">
+        Making your vision impossible to scroll past
+      </p>
+    </div>
+    <!-- Minimal Scroll Indicator -->
+    <div id="scrollPrompt" class="scroll-prompt">
+      <div class="mouse-icon">
+        <div class="mouse-wheel"></div>
+      </div>
+      <span class="prompt-text">SCROLL TO PLAY</span>
+    </div>
+  </div>
+
+  <!-- Scroll Container Space that powers the window.scrollY animation -->
+  <div id="scrollTrack" class="scroll-track"></div>
+
+  <!-- Content Sections below Scroll Animation (from code.html) -->
+  <main id="main-content" class="relative z-10 w-full bg-surface shadow-2xl pt-16">
+    <div class="flex flex-col w-full relative selection:bg-primary-container selection:text-on-primary-container">
+<!-- ==================== SERVICES SECTION ==================== -->
+<section class="w-full px-6 lg:px-12 py-16 lg:py-24 max-w-7xl mx-auto flex flex-col gap-12" id="services">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div class="flex flex-col gap-2 max-w-xl">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-widest">CREATIVE ARSENAL</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">YOUR VISION. MY TIMELINE.</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Whatever the footage, we can probably make something fire out of it. Choose the exact craft for your audience.</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-code-timecode text-body-sm text-secondary">6 SERVICE SUITES READY</span>
+</div>
+</div>
+<!-- 6 Service Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Card 1 -->
+<div class="p-6 rounded-2xl bg-surface-container-low hover:bg-surface-container transition-all shadow-md hover:shadow-xl hover:-translate-y-1 flex flex-col justify-between group">
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<div class="w-12 h-12 rounded-xl bg-surface-container-high text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">smartphone</span>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">SHORT-FORM</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">REELS THAT HIT DIFFERENT</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Reels, TikTok, YouTube Shorts engineered for retention.</p>
+</div>
+<ul class="flex flex-col gap-2 pt-2 text-on-surface-variant font-body-sm text-body-sm">
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[16px]">check_circle</span> Talking-head cutdowns &amp; jump-cut pacing</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[16px]">check_circle</span> Animated dynamic kinetic subtitles</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[16px]">check_circle</span> Sound FX punch-ins, zooms &amp; visual hooks</li>
+</ul>
+</div>
+<div class="pt-6">
+<a class="w-full py-2.5 px-4 rounded-xl bg-surface-container-high hover:bg-primary hover:text-on-primary text-on-surface font-body-md text-body-md font-semibold text-center transition-all inline-block" href="#booking">
+            MAKE MY REEL →
+          </a>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="p-6 rounded-2xl bg-surface-container-low hover:bg-surface-container transition-all shadow-md hover:shadow-xl hover:-translate-y-1 flex flex-col justify-between group">
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<div class="w-12 h-12 rounded-xl bg-surface-container-high text-secondary flex items-center justify-center group-hover:bg-secondary group-hover:text-on-secondary transition-colors">
+<span class="material-symbols-outlined text-[24px]">play_circle</span>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">LONG-FORM</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface group-hover:text-secondary transition-colors">THE FULL-LENGTH EXPERIENCE</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">YouTube narratives, vlogs, documentaries, and podcasts.</p>
+</div>
+<ul class="flex flex-col gap-2 pt-2 text-on-surface-variant font-body-sm text-body-sm">
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-[16px]">check_circle</span> Story pacing &amp; multi-camera sync</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-[16px]">check_circle</span> Custom chapter title cards &amp; motion lower thirds</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-[16px]">check_circle</span> Retentive intro hooks &amp; seamless outro cards</li>
+</ul>
+</div>
+<div class="pt-6">
+<a class="w-full py-2.5 px-4 rounded-xl bg-surface-container-high hover:bg-secondary hover:text-on-secondary text-on-surface font-body-md text-body-md font-semibold text-center transition-all inline-block" href="#booking">
+            EDIT MY VIDEO →
+          </a>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="p-6 rounded-2xl bg-surface-container-low hover:bg-surface-container transition-all shadow-md hover:shadow-xl hover:-translate-y-1 flex flex-col justify-between group">
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<div class="w-12 h-12 rounded-xl bg-surface-container-high text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">auto_awesome</span>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">ANIME / AMV</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">FANDOM MODE: ACTIVATED</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">High-energy anime edits, speedramps, and music flow.</p>
+</div>
+<ul class="flex flex-col gap-2 pt-2 text-on-surface-variant font-body-sm text-body-sm">
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[16px]">check_circle</span> Sub-frame beat synchronization &amp; velocity curves</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[16px]">check_circle</span> Chromatic glitch FX, CC lenses &amp; masking</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[16px]">check_circle</span> Stylized anime color presets &amp; glow passes</li>
+</ul>
+</div>
+<div class="pt-6">
+<a class="w-full py-2.5 px-4 rounded-xl bg-surface-container-high hover:bg-primary hover:text-on-primary text-on-surface font-body-md text-body-md font-semibold text-center transition-all inline-block" href="#booking">
+            CREATE AN EDIT →
+          </a>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="p-6 rounded-2xl bg-surface-container-low hover:bg-surface-container transition-all shadow-md hover:shadow-xl hover:-translate-y-1 flex flex-col justify-between group">
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<div class="w-12 h-12 rounded-xl bg-surface-container-high text-secondary flex items-center justify-center group-hover:bg-secondary group-hover:text-on-secondary transition-colors">
+<span class="material-symbols-outlined text-[24px]">videocam</span>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">COMMERCIAL</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface group-hover:text-secondary transition-colors">MAKE IT LOOK EXPENSIVE</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Cinematic promo trailers, commercials, and brand spots.</p>
+</div>
+<ul class="flex flex-col gap-2 pt-2 text-on-surface-variant font-body-sm text-body-sm">
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-[16px]">check_circle</span> DaVinci Resolve color grading &amp; film emulation</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-[16px]">check_circle</span> Sleek typography &amp; brand identity integration</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-[16px]">check_circle</span> Multi-aspect exports (16:9, 9:16, 1:1, 4:5)</li>
+</ul>
+</div>
+<div class="pt-6">
+<a class="w-full py-2.5 px-4 rounded-xl bg-surface-container-high hover:bg-secondary hover:text-on-secondary text-on-surface font-body-md text-body-md font-semibold text-center transition-all inline-block" href="#booking">
+            LEVEL UP MY VIDEO →
+          </a>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="p-6 rounded-2xl bg-surface-container-low hover:bg-surface-container transition-all shadow-md hover:shadow-xl hover:-translate-y-1 flex flex-col justify-between group">
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<div class="w-12 h-12 rounded-xl bg-surface-container-high text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">graphic_eq</span>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">AUDIO POST</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">SOUND IS HALF THE VIBE</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Full-spectrum sound design, vocal cleanup, and audio mixing.</p>
+</div>
+<ul class="flex flex-col gap-2 pt-2 text-on-surface-variant font-body-sm text-body-sm">
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[16px]">check_circle</span> Audio cleanup, noise gating &amp; vocal compression</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[16px]">check_circle</span> Layered whooshes, risers, hits &amp; tactile foley</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[16px]">check_circle</span> Dynamic sidechain ducking under voice tracks</li>
+</ul>
+</div>
+<div class="pt-6">
+<a class="w-full py-2.5 px-4 rounded-xl bg-surface-container-high hover:bg-primary hover:text-on-primary text-on-surface font-body-md text-body-md font-semibold text-center transition-all inline-block" href="#booking">
+            FIX MY AUDIO →
+          </a>
+</div>
+</div>
+<!-- Card 6 -->
+<div class="p-6 rounded-2xl bg-surface-container-low hover:bg-surface-container transition-all shadow-md hover:shadow-xl hover:-translate-y-1 flex flex-col justify-between group">
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<div class="w-12 h-12 rounded-xl bg-surface-container-high text-secondary flex items-center justify-center group-hover:bg-secondary group-hover:text-on-secondary transition-colors">
+<span class="material-symbols-outlined text-[24px]">image</span>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">GRAPHICS</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface group-hover:text-secondary transition-colors">THE CLICK STARTS HERE</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">CTR-engineered YouTube thumbnails that convert impressions.</p>
+</div>
+<ul class="flex flex-col gap-2 pt-2 text-on-surface-variant font-body-sm text-body-sm">
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-[16px]">check_circle</span> Visual hierarchy &amp; extreme edge rim-lighting</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-[16px]">check_circle</span> 3D bold typography &amp; focal point isolation</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-[16px]">check_circle</span> Delivered in 1080p optimized uncompressed JPG/PNG</li>
+</ul>
+</div>
+<div class="pt-6">
+<a class="w-full py-2.5 px-4 rounded-xl bg-surface-container-high hover:bg-secondary hover:text-on-secondary text-on-surface font-body-md text-body-md font-semibold text-center transition-all inline-block" href="#booking">
+            DESIGN MY THUMBNAIL →
+          </a>
+</div>
+</div>
+</div>
+</section>
+<!-- ==================== PORTFOLIO SHOWREEL SECTION ==================== -->
+<section class="w-full px-6 lg:px-12 py-16 max-w-7xl mx-auto flex flex-col gap-8" id="work">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div class="flex flex-col gap-2">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-widest">SELECTED TIMELINE CUTS</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">LESS TALK. MORE SHOWREEL.</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Don't take my word for it. Watch the work.</p>
+</div>
+<p class="font-code-timecode text-body-sm text-on-surface-variant">
+        TIMELINE SLICES: <span class="text-primary">6 ACTIVE EXPORTS</span>
+</p>
+</div>
+<!-- Category Filter Tabs -->
+<div class="flex flex-wrap items-center gap-2 border-b border-surface-container-high pb-4 overflow-x-auto">
+<button class="portfolio-tab-btn active px-4 py-1.5 rounded-lg bg-primary text-on-primary font-label-sm text-label-sm uppercase transition-all" data-filter="all">ALL WORK</button>
+<button class="portfolio-tab-btn px-4 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase transition-all" data-filter="short">SHORT-FORM</button>
+<button class="portfolio-tab-btn px-4 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase transition-all" data-filter="youtube">YOUTUBE</button>
+<button class="portfolio-tab-btn px-4 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase transition-all" data-filter="anime">ANIME EDITS</button>
+<button class="portfolio-tab-btn px-4 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase transition-all" data-filter="cinematic">CINEMATIC</button>
+<button class="portfolio-tab-btn px-4 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase transition-all" data-filter="sound">SOUND DESIGN</button>
+<button class="portfolio-tab-btn px-4 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase transition-all" data-filter="thumbnails">THUMBNAILS</button>
+</div>
+<!-- Portfolio Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="portfolio-grid">
+<!-- Item 1 (Short) -->
+<div class="portfolio-card group rounded-2xl bg-surface-container-low overflow-hidden shadow-md hover:shadow-xl transition-all flex flex-col" data-category="short">
+<div class="relative aspect-video w-full overflow-hidden bg-surface-container-highest cursor-pointer">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A fast-paced, neon-lit vertical video edit mockup shown inside an editing preview monitor with vibrant kinetic captions and waveform meters in lavender and cyan tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaPs4Af2n6u7dSW4YmefRHwGntK9KGGYLHXVh8cybCak-oifNWfVn5BXs-yfxFmc-jY7mATzidVUJTPSDnlWJrbpO0Ibe-E0yD4I81Y4nXftpDEUAilmkhisU9A2vm1jr4kFvgC5lkYmnFv9Pb5iAKSGSKcskkdDHMrYKMLiSDSZLl4UY4uTgrSvyBfp_GzBulllTcaG8eQnnsU-S_NCR0jazsUQKQE0uQXmJCscsXcdlDnb18j76HJA"/>
+<div class="absolute inset-0 bg-surface-container-lowest/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="w-12 h-12 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-lg"><span class="material-symbols-outlined">play_arrow</span></span>
+</div>
+<span class="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-surface-container-lowest/80 font-code-timecode text-label-sm text-primary">00:32</span>
+<span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-primary-container text-on-primary-container font-label-sm text-label-sm">4K 60FPS</span>
+</div>
+<div class="p-5 flex flex-col gap-3 flex-1 justify-between">
+<div>
+<span class="font-label-sm text-label-sm text-secondary uppercase">REEL / TIKTOK</span>
+<h4 class="font-headline-md text-headline-md text-on-surface mt-1 group-hover:text-primary transition-colors">Hyper-Kinetic Tech Review Hook</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Multi-angle cutdown with synced sound effects and custom font tracking.</p>
+</div>
+<div class="flex items-center gap-2 pt-2 border-t border-surface-container-high">
+<span class="font-code-timecode text-label-sm text-on-surface-variant">Premiere Pro · After Effects</span>
+</div>
+</div>
+</div>
+<!-- Item 2 (YouTube) -->
+<div class="portfolio-card group rounded-2xl bg-surface-container-low overflow-hidden shadow-md hover:shadow-xl transition-all flex flex-col" data-category="youtube">
+<div class="relative aspect-video w-full overflow-hidden bg-surface-container-highest cursor-pointer">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A cinematic widescreen documentary YouTube video editor timeline playback displaying a Japanese street at dusk with moody teal and orange grading." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnPh4wl9-3T1Z_DkNKueCaF5ScK0Jmv9glZR854WKkFe0v3mNVhYzuSRsDp8CKboRtEDqm5k0mKHVhQr6vKaV5GvjbkFSfx2o3XCvVlraNyewqT3I_T94YRqCt1BZiKuprJ9l3dDNfSA7NAw_m-eGdJf0FuJv5xO-FnCttUBAawgVpoM-ORaovFmcv_PAxiFL9nucuctswY7_TiH1XvTFJrt3e8Z1bieCRe5fxephdx2dq40mpnC1suQ"/>
+<div class="absolute inset-0 bg-surface-container-lowest/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="w-12 h-12 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-lg"><span class="material-symbols-outlined">play_arrow</span></span>
+</div>
+<span class="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-surface-container-lowest/80 font-code-timecode text-label-sm text-primary">14:28</span>
+<span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-primary-container text-on-primary-container font-label-sm text-label-sm">4K DCI</span>
+</div>
+<div class="p-5 flex flex-col gap-3 flex-1 justify-between">
+<div>
+<span class="font-label-sm text-label-sm text-secondary uppercase">LONG-FORM DOCU</span>
+<h4 class="font-headline-md text-headline-md text-on-surface mt-1 group-hover:text-primary transition-colors">Tokyo Night Walk: Creator Vlog</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Pacing overhaul with ambient audio redesign and custom title cards.</p>
+</div>
+<div class="flex items-center gap-2 pt-2 border-t border-surface-container-high">
+<span class="font-code-timecode text-label-sm text-on-surface-variant">DaVinci Resolve · Audition</span>
+</div>
+</div>
+</div>
+<!-- Item 3 (Anime) -->
+<div class="portfolio-card group rounded-2xl bg-surface-container-low overflow-hidden shadow-md hover:shadow-xl transition-all flex flex-col" data-category="anime">
+<div class="relative aspect-video w-full overflow-hidden bg-surface-container-highest cursor-pointer">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="An electric anime AMV scene with velocity curves, chromatic lens flare, and soft purple sakura particle effects on a high-definition monitor." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_DWokhQ_PWX75TeYAGd3Vl5HmQsqkSGukvJP_7ui-erSju-WejgbMOS4ZHA-CtORd56kp-2vZkI5BIrTYhfsKvSZOvmVOQH82zh1CqBvCCZeWrQ4MEQ6WEyM2M0IefZv6GTFutuOh9vcSCq1QS5nB2xFvxQtsGpbIoAZUCRND5l0w4GllgW47GCk4YwLnwy3vM1vd_cMQLj22EPJGpmzg4DzGxma522ig74HRLKDsurOhFEVKYDnvXw"/>
+<div class="absolute inset-0 bg-surface-container-lowest/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="w-12 h-12 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-lg"><span class="material-symbols-outlined">play_arrow</span></span>
+</div>
+<span class="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-surface-container-lowest/80 font-code-timecode text-label-sm text-primary">02:15</span>
+<span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-secondary-container text-on-secondary-container font-label-sm text-label-sm">120 FPS FLOW</span>
+</div>
+<div class="p-5 flex flex-col gap-3 flex-1 justify-between">
+<div>
+<span class="font-label-sm text-label-sm text-secondary uppercase">ANIME / SPEEDRAMP</span>
+<h4 class="font-headline-md text-headline-md text-on-surface mt-1 group-hover:text-primary transition-colors">Midnight Resonance ✦ Velocity AMV</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">High-bpm music synchronization with speed ramp masking and 3D camera pan.</p>
+</div>
+<div class="flex items-center gap-2 pt-2 border-t border-surface-container-high">
+<span class="font-code-timecode text-label-sm text-on-surface-variant">After Effects · Sapphire · Twixtor</span>
+</div>
+</div>
+</div>
+<!-- Item 4 (Cinematic) -->
+<div class="portfolio-card group rounded-2xl bg-surface-container-low overflow-hidden shadow-md hover:shadow-xl transition-all flex flex-col" data-category="cinematic">
+<div class="relative aspect-video w-full overflow-hidden bg-surface-container-highest cursor-pointer">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A commercial luxury mechanical keyboard advertisement frame with soft darkroom lighting, moody rim light, and crisp depth-of-field reflections." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtpt0bCElbmOXgg6lDDP03h1QXrtHCCUSjvYF_gdn6Kovf7tibcG8A0Uw1mbDwnAVktLFGY1chdTxzwQS1V0E4vEt6fZ_JmAe7pXxYnCeedHHtTjPe3t7okMQqzlSEf4d0Kc4TcdiWB9OAcaD5a1sP7qeLwtAqc7C4h6ztQDxTJq3C5EJW-74GEiZ_vwGRyWFcGjSeq4OG0XYEewSxwKWRmgBhXqRyfSYK0tkN1VKB2fJYF27xd6YWxg"/>
+<div class="absolute inset-0 bg-surface-container-lowest/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="w-12 h-12 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-lg"><span class="material-symbols-outlined">play_arrow</span></span>
+</div>
+<span class="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-surface-container-lowest/80 font-code-timecode text-label-sm text-primary">01:05</span>
+<span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-primary-container text-on-primary-container font-label-sm text-label-sm">COLOR GRADED</span>
+</div>
+<div class="p-5 flex flex-col gap-3 flex-1 justify-between">
+<div>
+<span class="font-label-sm text-label-sm text-secondary uppercase">BRAND / COMMERCIAL</span>
+<h4 class="font-headline-md text-headline-md text-on-surface mt-1 group-hover:text-primary transition-colors">Lumina Keyboards Brand Teaser</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Film grain emulation, 2.39:1 letterbox master, and bespoke motion typography.</p>
+</div>
+<div class="flex items-center gap-2 pt-2 border-t border-surface-container-high">
+<span class="font-code-timecode text-label-sm text-on-surface-variant">DaVinci Studio · Blender 3D</span>
+</div>
+</div>
+</div>
+<!-- Item 5 (Sound Design) -->
+<div class="portfolio-card group rounded-2xl bg-surface-container-low overflow-hidden shadow-md hover:shadow-xl transition-all flex flex-col" data-category="sound">
+<div class="relative aspect-video w-full overflow-hidden bg-surface-container-highest cursor-pointer">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A multi-track digital audio workstation interface showcasing dozens of lavender and pink waveform layers, equalizers, and spectral frequency analysis." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBemXi17lYC7NbvHv0aN2y92uRrhJRdGaqyogzdSJLdI5PhxooePa2_jm_bd7PkPO3ijSaGbTnJmpkxoVY8vWIJk5gNn05E0asR1Ph8QEtvpVuxOmei3tn2O5YaP5iP4TsTI2NfzE53tugQA4Airi9fuCYs2V0GQ_3kvTiXynJe_aojwZoapUV_tWOmxpYgKRrtGGw-MauEluU2WEFHE7_3_eEBn8q-yjj08M8WCnw_SgZZC68azej7Mw"/>
+<div class="absolute inset-0 bg-surface-container-lowest/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="w-12 h-12 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-lg"><span class="material-symbols-outlined">play_arrow</span></span>
+</div>
+<span class="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-surface-container-lowest/80 font-code-timecode text-label-sm text-primary">00:45</span>
+<span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-primary-container text-on-primary-container font-label-sm text-label-sm">48kHz 24-BIT</span>
+</div>
+<div class="p-5 flex flex-col gap-3 flex-1 justify-between">
+<div>
+<span class="font-label-sm text-label-sm text-secondary uppercase">SOUND REDESIGN</span>
+<h4 class="font-headline-md text-headline-md text-on-surface mt-1 group-hover:text-primary transition-colors">Cyberpunk Chase Scene Audio Mix</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Complete foley replacement, synthetic whoosh creation, and sub-bass impacts.</p>
+</div>
+<div class="flex items-center gap-2 pt-2 border-t border-surface-container-high">
+<span class="font-code-timecode text-label-sm text-on-surface-variant">Ableton Live · Premiere Pro</span>
+</div>
+</div>
+</div>
+<!-- Item 6 (Thumbnails) -->
+<div class="portfolio-card group rounded-2xl bg-surface-container-low overflow-hidden shadow-md hover:shadow-xl transition-all flex flex-col" data-category="thumbnails">
+<div class="relative aspect-video w-full overflow-hidden bg-surface-container-highest cursor-pointer">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A bold, high-contrast YouTube video thumbnail composition with high dynamic range creator cutout, dramatic rim light, and punchy 3D typography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5qJUGzuI9bmwBMW6AJIA6pZ-5xJUPstzR3O_8sZkRDGWL2ytSEkdlKeG6beCEVB9uasBjf7ZekG02Lx4deeg9kU1pcY9K9cxllqspPYBMm_m0OP6xjY8art1GLBOxebfCSW4nfBHHS9ttvN-nZ39iK9Ijrn_0lgQXCRsqOkrQqoiwEIO0J3AX58dYVexagf3bzELie5Rs_SXyxeve8AOBCajEFGawSZE5UMv6CdR2WY2EikuZcodxcA"/>
+<div class="absolute inset-0 bg-surface-container-lowest/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="w-12 h-12 rounded-full bg-secondary text-on-secondary flex items-center justify-center shadow-lg"><span class="material-symbols-outlined">zoom_in</span></span>
+</div>
+<span class="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-surface-container-lowest/80 font-code-timecode text-label-sm text-secondary">CTR 14.8%</span>
+<span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-secondary-container text-on-secondary-container font-label-sm text-label-sm">HIGH CTR</span>
+</div>
+<div class="p-5 flex flex-col gap-3 flex-1 justify-between">
+<div>
+<span class="font-label-sm text-label-sm text-secondary uppercase">GRAPHICS / THUMBNAIL</span>
+<h4 class="font-headline-md text-headline-md text-on-surface mt-1 group-hover:text-primary transition-colors">"I Spent 100 Hours In Anime Studio"</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Hand-painted lighting masks, cutout frequency separation, and 3D typography.</p>
+</div>
+<div class="flex items-center gap-2 pt-2 border-t border-surface-container-high">
+<span class="font-code-timecode text-label-sm text-on-surface-variant">Photoshop · Blender</span>
+</div>
+</div>
+</div>
+</div>
+<!-- CTA Banner -->
+<div class="p-8 rounded-2xl bg-gradient-to-r from-surface-container to-surface-container-high flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
+<div class="flex flex-col gap-1 text-center md:text-left">
+<h3 class="font-headline-lg text-headline-lg text-on-surface">YOUR PROJECT COULD BE NEXT.</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Slots for this month are limited. Lock in your cut before the schedule fills.</p>
+</div>
+<a class="px-8 py-3.5 rounded-xl bg-primary text-on-primary font-headline-md text-body-md hover:bg-primary-container hover:text-on-primary-container shadow-md transition-all whitespace-nowrap" href="#booking">
+        LET'S MAKE SOMETHING →
+      </a>
+</div>
+</section>
+<!-- ==================== BEFORE & AFTER SLIDER ==================== -->
+<section class="w-full px-5 sm:px-8 lg:px-12 py-14 lg:py-20 max-w-7xl mx-auto flex flex-col gap-7 sm:gap-8" id="before-after">
+  <!-- Section Header -->
+  <div class="flex flex-col items-center text-center gap-2.5 max-w-2xl mx-auto">
+    <span class="font-code-timecode text-xs sm:text-[13px] font-semibold text-secondary uppercase tracking-[0.16em]">TIMELINE COMPARISON</span>
+    <h2 class="font-headline-lg text-2xl sm:text-3xl lg:text-[36px] font-bold tracking-tight text-on-surface leading-tight">THE GLOW-UP IS REAL.</h2>
+    <p class="font-body-md text-sm sm:text-[15px] text-on-surface/85 leading-relaxed max-w-xl">
+      Drag the playhead divider below to witness the real-time difference between flat source files and calibrated master delivery.
+    </p>
+  </div>
+
+  <!-- Comparison Mode Tabs -->
+  <div class="flex justify-center w-full">
+    <div class="inline-grid grid-cols-1 sm:grid-cols-2 p-1.5 rounded-2xl bg-[#171720] border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.45)] w-full max-w-md sm:max-w-fit gap-1" role="tablist" aria-label="Comparison mode">
+      <button
+        class="px-5 py-2.5 rounded-xl bg-primary text-on-primary font-body-md text-[13px] sm:text-sm font-semibold tracking-wide shadow-[0_2px_12px_rgba(202,190,255,0.35)] transition-all text-center"
+        id="slider-tab-color"
+        onclick="switchSliderMode('color')"
+        type="button"
+      >
+        Log vs. Color Grade &amp; Grain
+      </button>
+      <button
+        class="px-5 py-2.5 rounded-xl text-on-surface/80 hover:text-on-surface hover:bg-white/[0.04] font-body-md text-[13px] sm:text-sm font-medium tracking-wide transition-all text-center"
+        id="slider-tab-subtitles"
+        onclick="switchSliderMode('subtitles')"
+        type="button"
+      >
+        Raw Cut vs. Kinetic Motion
+      </button>
+    </div>
+  </div>
+
+  <!-- Interactive 16:9 Comparison Stage -->
+  <div class="relative w-full max-w-5xl mx-auto aspect-video rounded-2xl overflow-hidden select-none bg-[#0d0d15] border border-white/[0.12] shadow-[0_24px_60px_-15px_rgba(0,0,0,0.85),0_0_40px_rgba(169,155,239,0.08)] group">
+    <!-- After Image (Full 16:9 Base Layer) -->
+    <div class="absolute inset-0 w-full h-full">
+      <img
+        alt="Finished 4K cinematic video frame in vivid deep contrast, glowing lavender neon hues, film grain, and crisp saturation."
+        class="w-full h-full object-cover block"
+        data-alt="Finished 4K cinematic video frame in vivid deep contrast, glowing lavender neon hues, film grain, and crisp saturation."
+        decoding="async"
+        draggable="false"
+        id="slider-after-img"
+        src="videos/compare-grade-after.jpg"
+      />
+    </div>
+
+    <!-- Before Image (Full 16:9 Layer Clipped via clip-path to prevent any stretching) -->
+    <div
+      class="absolute inset-0 w-full h-full overflow-hidden will-change-[clip-path]"
+      id="slider-clipped-layer"
+      style="clip-path: inset(0 50% 0 0); -webkit-clip-path: inset(0 50% 0 0);"
+    >
+      <img
+        alt="Unedited flat desaturated logarithmic raw camera footage with washed out shadows and no color correction."
+        class="w-full h-full object-cover block"
+        data-alt="Unedited flat desaturated logarithmic raw camera footage with washed out shadows and no color correction."
+        decoding="async"
+        draggable="false"
+        id="slider-before-img"
+        src="videos/compare-log-before.jpg"
+      />
+    </div>
+
+    <!-- Top Corner Status Badges (Non-clipped overlay for crisp readability) -->
+    <div class="absolute top-2.5 left-2.5 sm:top-4 sm:left-4 z-10 pointer-events-none px-2.5 py-1 sm:px-3.5 sm:py-2 rounded-lg sm:rounded-xl bg-[#0d0d15]/90 backdrop-blur-md border border-white/15 text-secondary font-code-timecode text-[10px] sm:text-xs font-semibold tracking-wide sm:tracking-wider flex items-center gap-1.5 sm:gap-2 shadow-lg transition-opacity duration-150" id="slider-before-badge">
+      <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-secondary shadow-[0_0_8px_rgba(238,183,206,0.8)] shrink-0"></span>
+      <span id="slider-before-label">RAW LOG FOOTAGE</span>
+    </div>
+
+    <div class="absolute top-2.5 right-2.5 sm:top-4 sm:right-4 z-10 pointer-events-none px-2.5 py-1 sm:px-3.5 sm:py-2 rounded-lg sm:rounded-xl bg-[#0d0d15]/90 backdrop-blur-md border border-white/15 text-primary font-code-timecode text-[10px] sm:text-xs font-semibold tracking-wide sm:tracking-wider flex items-center gap-1.5 sm:gap-2 shadow-lg transition-opacity duration-150" id="slider-after-badge">
+      <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(202,190,255,0.8)] shrink-0"></span>
+      <span id="slider-after-label">GRADED &amp; POLISHED 4K MASTER</span>
+    </div>
+
+    <!-- Draggable Playhead Split Bar -->
+    <div
+      class="absolute top-0 bottom-0 w-[2px] -translate-x-1/2 bg-primary pointer-events-none z-10 flex items-center justify-center shadow-[0_0_20px_rgba(202,190,255,0.95)]"
+      id="slider-handle"
+      style="left: 50%;"
+    >
+      <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-primary text-on-primary border-2 border-[#0d0d15] flex items-center justify-center shadow-[0_4px_20px_rgba(0,0,0,0.65),0_0_20px_rgba(202,190,255,0.6)] group-hover:scale-105 group-active:scale-95 transition-transform">
+        <span class="material-symbols-outlined text-[20px] rotate-90 select-none">unfold_more</span>
+      </div>
+    </div>
+
+    <!-- Range Input for Touch/Mouse/Keyboard Interaction -->
+    <input
+      aria-label="Compare raw vs polished edit"
+      class="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-20 m-0"
+      id="slider-range-input"
+      max="100"
+      min="0"
+      step="0.5"
+      type="range"
+      value="50"
+    />
+  </div>
+
+  <!-- Comparative Value Breakdown (Aligned to same max-w-5xl grid) -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 max-w-5xl mx-auto w-full">
+    <div class="p-5 sm:p-6 rounded-2xl bg-[#181822] border border-white/[0.08] hover:border-primary/30 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)] flex flex-col gap-2 transition-all">
+      <div class="flex items-center gap-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0"></span>
+        <span class="font-code-timecode text-xs sm:text-[13px] font-semibold text-primary uppercase tracking-wider">01 / Dynamic Color</span>
+      </div>
+      <p class="font-body-md text-[13.5px] sm:text-sm text-on-surface/85 leading-relaxed">
+        Log sensor curve transformed into deep shadow contrast with calibrated highlight roll-off and natural skin tones.
+      </p>
+    </div>
+
+    <div class="p-5 sm:p-6 rounded-2xl bg-[#181822] border border-white/[0.08] hover:border-secondary/30 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)] flex flex-col gap-2 transition-all">
+      <div class="flex items-center gap-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-secondary shrink-0"></span>
+        <span class="font-code-timecode text-xs sm:text-[13px] font-semibold text-secondary uppercase tracking-wider">02 / Auditory Space</span>
+      </div>
+      <p class="font-body-md text-[13.5px] sm:text-sm text-on-surface/85 leading-relaxed">
+        Flat camera mic replaced with spatial stereo sound FX, impact risers, and studio-grade vocal EQ.
+      </p>
+    </div>
+
+    <div class="p-5 sm:p-6 rounded-2xl bg-[#181822] border border-white/[0.08] hover:border-tertiary/30 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)] flex flex-col gap-2 transition-all">
+      <div class="flex items-center gap-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-tertiary shrink-0"></span>
+        <span class="font-code-timecode text-xs sm:text-[13px] font-semibold text-tertiary uppercase tracking-wider">03 / Attention Velocity</span>
+      </div>
+      <p class="font-body-md text-[13.5px] sm:text-sm text-on-surface/85 leading-relaxed">
+        Dead space trimmed down to milliseconds, keeping viewer eyes locked to the center frame from hook to outro.
+      </p>
+    </div>
+  </div>
+</section>
+<!-- ==================== THE WORKFLOW SECTION ==================== -->
+<section class="w-full px-6 lg:px-12 py-16 lg:py-24 max-w-7xl mx-auto flex flex-col gap-12" id="workflow">
+<div class="flex flex-col items-center text-center gap-2 max-w-xl mx-auto">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-widest">NLE PRODUCTION PIPELINE</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">FROM RAW TO RIDICULOUSLY GOOD.</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">No friction, no confusion. Here is exactly what happens from the moment we link up to the final export.</p>
+</div>
+<!-- 4-Step Timeline Pipeline -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+<!-- Step 01 -->
+<div class="p-6 rounded-2xl bg-surface-container-low flex flex-col justify-between gap-6 relative group hover:bg-surface-container transition-all">
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<span class="font-code-timecode text-headline-md text-primary font-bold">01</span>
+<div class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">assignment</span>
+</div>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">THE BRIEF</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2 leading-relaxed">
+              You tell me the vision, target platform, pacing vibe, deadline, and everything you want the final edit to feel like.
+            </p>
+</div>
+</div>
+<div class="px-3 py-1.5 rounded-lg bg-surface-container text-on-surface-variant font-code-timecode text-label-sm">
+          INPUT: Vision + Moodboard
+        </div>
+</div>
+<!-- Step 02 -->
+<div class="p-6 rounded-2xl bg-surface-container-low flex flex-col justify-between gap-6 relative group hover:bg-surface-container transition-all">
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<span class="font-code-timecode text-headline-md text-secondary font-bold">02</span>
+<div class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px]">cloud_upload</span>
+</div>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">DROP THE FILES</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2 leading-relaxed">
+              Send your raw footage, reference links, audio tracks, and instructions via Google Drive, Dropbox, or Frame.io.
+            </p>
+</div>
+</div>
+<div class="px-3 py-1.5 rounded-lg bg-surface-container text-on-surface-variant font-code-timecode text-label-sm">
+          TRANSFER: Secure Cloud Ingest
+        </div>
+</div>
+<!-- Step 03 -->
+<div class="p-6 rounded-2xl bg-surface-container-low flex flex-col justify-between gap-6 relative group hover:bg-surface-container transition-all">
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<span class="font-code-timecode text-headline-md text-primary font-bold">03</span>
+<div class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">cooking</span>
+</div>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">LET ME COOK</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2 leading-relaxed">
+              I dive into the cuts, velocity pacing, visual graphics, soundscape layering, and color grading for optimal retention.
+            </p>
+</div>
+</div>
+<div class="px-3 py-1.5 rounded-lg bg-surface-container text-on-surface-variant font-code-timecode text-label-sm">
+          ACTION: Multi-layer NLE Render
+        </div>
+</div>
+<!-- Step 04 -->
+<div class="p-6 rounded-2xl bg-surface-container-low flex flex-col justify-between gap-6 relative group hover:bg-surface-container transition-all">
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<span class="font-code-timecode text-headline-md text-secondary font-bold">04</span>
+<div class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px]">verified</span>
+</div>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">THE FINAL DROP</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2 leading-relaxed">
+              Review the initial cut, request revisions according to your loadout, and receive the finished master ready to publish.
+            </p>
+</div>
+</div>
+<div class="px-3 py-1.5 rounded-lg bg-surface-container text-on-surface-variant font-code-timecode text-label-sm">
+          DELIVERY: Master 4K ProRes/MP4
+        </div>
+</div>
+</div>
+<!-- Process Assurance Strip -->
+<div class="p-6 rounded-2xl bg-surface-container-low flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary/20 text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined">published_with_changes</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface">
+<strong class="text-on-surface font-semibold">Clear agreed turnaround times &amp; transparent revision passes.</strong> No endless ghosting, no timeline surprises.
+        </p>
+</div>
+<a class="px-6 py-2.5 rounded-xl bg-primary text-on-primary font-headline-md text-body-md hover:bg-primary-container hover:text-on-primary-container transition-all whitespace-nowrap" href="#booking">
+        START YOUR PROJECT →
+      </a>
+</div>
+</section>
+<!-- ==================== PRICING & LOADOUTS ==================== -->
+<section class="w-full px-6 lg:px-12 py-16 lg:py-24 max-w-7xl mx-auto flex flex-col gap-12" id="pricing">
+<div class="flex flex-col items-center text-center gap-2 max-w-xl mx-auto">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-widest">TRANSPARENT RATES</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">CHOOSE YOUR LOADOUT.</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Different projects, different needs. Let's find your perfect setup with zero hidden surprise fees.</p>
+</div>
+<!-- 3 Pricing Cards -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+<!-- Tier 1: Basic -->
+<div class="p-8 rounded-2xl bg-surface-container-low flex flex-col justify-between gap-6 shadow-md hover:shadow-xl transition-all">
+<div class="flex flex-col gap-6">
+<div class="flex flex-col gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">ENTRY SETUP</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">THE QUICK CUT</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Ideal for straightforward cuts, podcast clips, and basic reels.</p>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-on-surface font-bold">$44</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">/ per clip</span>
+</div>
+<ul class="flex flex-col gap-3 font-body-sm text-body-sm text-on-surface-variant pt-4 border-t border-surface-container-high">
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[18px]">check</span> Essential footage trimming &amp; jump cuts</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[18px]">check</span> Clean subtitle generation &amp; placement</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[18px]">check</span> Background royalty-free music mix</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[18px]">check</span> 1 revision round included</li>
+<li class="flex items-center gap-2 text-outline"><span class="material-symbols-outlined text-[18px]">close</span> No advanced motion graphics</li>
+</ul>
+</div>
+<a class="w-full py-3 rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface font-body-md text-body-md font-semibold text-center transition-all" href="#booking">
+          START SIMPLE →
+        </a>
+</div>
+<!-- Tier 2: Standard (Creator Favorite) -->
+<div class="p-8 rounded-2xl bg-surface-container relative flex flex-col justify-between gap-6 shadow-2xl transform lg:-translate-y-2">
+<!-- Badge -->
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-primary text-on-primary font-label-sm text-label-sm uppercase tracking-wider shadow-md">
+          ★ CREATOR FAVORITE
+        </div>
+<div class="flex flex-col gap-6 pt-2">
+<div class="flex flex-col gap-2">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-wider">RECOMMENDED LOADOUT</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">THE FULL SAUCE</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">The high-impact sweet spot for growing creators and viral reels.</p>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-primary font-bold">$100</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">/ per cut</span>
+</div>
+<ul class="flex flex-col gap-3 font-body-sm text-body-sm text-on-surface-variant pt-4 border-t border-surface-container-high">
+<li class="flex items-center gap-2 text-on-surface"><span class="material-symbols-outlined text-primary text-[18px]">check</span> Everything in Basic, plus:</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[18px]">check</span> Dynamic zooms &amp; velocity motion pacing</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[18px]">check</span> Kinetic animated subtitles with emoji tags</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[18px]">check</span> Multi-layer sound FX (risers, hits, whooshes)</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[18px]">check</span> Full color correction &amp; skin tone tuning</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[18px]">check</span> 2 comprehensive revision rounds</li>
+</ul>
+</div>
+<a class="w-full py-3.5 rounded-xl bg-primary text-on-primary font-body-md text-body-md font-semibold text-center hover:bg-primary-container hover:text-on-primary-container shadow-lg transition-all" href="#booking">
+          LET'S LEVEL UP →
+        </a>
+</div>
+<!-- Tier 3: Premium -->
+<div class="p-8 rounded-2xl bg-surface-container-low flex flex-col justify-between gap-6 shadow-md hover:shadow-xl transition-all">
+<div class="flex flex-col gap-6">
+<div class="flex flex-col gap-2">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">FULL CINEMATIC</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">FINAL BOSS MODE</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Top-tier production for flagship YouTube videos, AMVs, and brand ads.</p>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-secondary font-bold">$211</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">/ per video</span>
+</div>
+<ul class="flex flex-col gap-3 font-body-sm text-body-sm text-on-surface-variant pt-4 border-t border-surface-container-high">
+<li class="flex items-center gap-2 text-on-surface"><span class="material-symbols-outlined text-secondary text-[18px]">check</span> Everything in Standard, plus:</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-[18px]">check</span> Custom After Effects 3D motion graphics</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-[18px]">check</span> Hollywood-grade DaVinci color grading &amp; film grain</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-[18px]">check</span> Bespoke binaural sound design master</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-[18px]">check</span> Priority render queue (48h target)</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-[18px]">check</span> 3 revision passes + Project archive access</li>
+</ul>
+</div>
+<a class="w-full py-3 rounded-xl bg-surface-container-high hover:bg-secondary hover:text-on-secondary text-on-surface font-body-md text-body-md font-semibold text-center transition-all" href="#booking">
+          UNLOCK PREMIUM →
+        </a>
+</div>
+</div>
+<!-- Thumbnail Add-On Callout -->
+<div class="p-6 rounded-2xl bg-surface-container-low flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-secondary/20 text-secondary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[26px]">art_track</span>
+</div>
+<div>
+<h4 class="font-headline-md text-headline-md text-on-surface">NEED THUMBNAILS TO MATCH?</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Standalone YouTube / Reel cover designs available at $17 or bundled into video loadouts at a discount.</p>
+</div>
+</div>
+<a class="px-6 py-2.5 rounded-xl bg-surface-container-high hover:bg-secondary hover:text-on-secondary text-on-surface font-body-md text-body-md font-semibold transition-all whitespace-nowrap" href="#booking">
+        ADD THUMBNAILS →
+      </a>
+</div>
+</section>
+<!-- ==================== INTERACTIVE BOOKING FORM ==================== -->
+<section class="w-full px-6 lg:px-12 py-16 lg:py-24 max-w-7xl mx-auto flex flex-col gap-10" id="booking">
+<div class="flex flex-col items-center text-center gap-2 max-w-2xl mx-auto">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-widest">SECURE YOUR TIMELINE</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">YOUR NEXT BANGER STARTS HERE.</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Got footage waiting to be edited? Let's get it out of your drafts and onto the timeline.</p>
+</div>
+<div class="w-full max-w-4xl mx-auto p-8 sm:p-10 rounded-3xl bg-surface-container-low shadow-2xl relative">
+<!-- Glow Decor -->
+<div class="absolute -top-10 -right-10 w-48 h-48 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+<!-- State: Confirmed Success Message (Hidden by default) -->
+<div class="hidden flex-col items-center text-center py-16 gap-6" id="booking-success-state">
+<div class="w-20 h-20 rounded-full bg-primary/20 text-primary flex items-center justify-center shadow-lg animate-bounce">
+<span class="material-symbols-outlined text-[40px]">check_circle</span>
+</div>
+<div class="flex flex-col gap-2 max-w-md">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-widest">TRANSMISSION CONFIRMED</span>
+<h3 class="font-headline-lg text-headline-lg text-on-surface">REQUEST SENT. NOW WE'RE COOKING. ✦</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            I review incoming inquiries within 24 hours. Check your inbox for my project kickoff email and timeline confirmation.
+          </p>
+</div>
+<button class="px-6 py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface font-body-md text-body-md transition-all" onclick="resetBookingForm()">
+          Submit Another Project
+        </button>
+</div>
+<!-- Form Container -->
+<form class="flex flex-col gap-6" id="studio-booking-form" novalidate="novalidate" onsubmit="handleBookingSubmit(event)">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Full Name -->
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase" for="client-name">Full Name *</label>
+<input aria-required="true" class="w-full px-4 py-3 rounded-xl bg-surface-container-lowest text-on-surface placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary transition-all font-body-md text-body-md" id="client-name" placeholder="Who are we cooking for?" required="" type="text"/>
+<p class="hidden text-error font-body-sm text-xs items-center gap-1.5 pt-0.5" id="error-client-name" role="alert">
+<span class="material-symbols-outlined text-[15px] shrink-0">error</span>
+<span id="error-client-name-text"></span>
+</p>
+</div>
+<!-- Email Address -->
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase" for="client-email">Email Address *</label>
+<input aria-required="true" class="w-full px-4 py-3 rounded-xl bg-surface-container-lowest text-on-surface placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary transition-all font-body-md text-body-md" id="client-email" placeholder="Where should we hit you back?" required="" type="email"/>
+<p class="hidden text-error font-body-sm text-xs items-center gap-1.5 pt-0.5" id="error-client-email" role="alert">
+<span class="material-symbols-outlined text-[15px] shrink-0">error</span>
+<span id="error-client-email-text"></span>
+</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Creator / Brand Handle -->
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase" for="client-handle">Creator / Brand Handle <span class="text-outline normal-case font-normal">(optional)</span></label>
+<input class="w-full px-4 py-3 rounded-xl bg-surface-container-lowest text-on-surface placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary transition-all font-body-md text-body-md" id="client-handle" placeholder="@channelhandle" type="text"/>
+</div>
+<!-- Project Type Dropdown -->
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase" for="project-type">Project Type *</label>
+<select aria-required="true" class="w-full px-4 py-3 rounded-xl bg-surface-container-lowest text-on-surface focus:outline-none focus:ring-1 focus:ring-primary transition-all font-body-md text-body-md" id="project-type" required="">
+<option value="short-form">Short-Form (Reels / TikTok / Shorts)</option>
+<option value="youtube-long">YouTube Long-Form Video</option>
+<option value="anime-amv">Anime / Fan Edit (AMV)</option>
+<option value="commercial">Cinematic Brand / Promo</option>
+<option value="audio-sound">Sound Design / Foley</option>
+<option value="thumbnail-only">Thumbnail Design Only</option>
+</select>
+<p class="hidden text-error font-body-sm text-xs items-center gap-1.5 pt-0.5" id="error-project-type" role="alert">
+<span class="material-symbols-outlined text-[15px] shrink-0">error</span>
+<span id="error-project-type-text"></span>
+</p>
+</div>
+<!-- Target Platform -->
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase" for="target-platform">Target Platform *</label>
+<select aria-required="true" class="w-full px-4 py-3 rounded-xl bg-surface-container-lowest text-on-surface focus:outline-none focus:ring-1 focus:ring-primary transition-all font-body-md text-body-md" id="target-platform" required="">
+<option value="youtube">YouTube (16:9)</option>
+<option value="instagram">Instagram / TikTok (9:16)</option>
+<option value="cross-platform">Cross-Platform (Both)</option>
+<option value="other">Other Format</option>
+</select>
+<p class="hidden text-error font-body-sm text-xs items-center gap-1.5 pt-0.5" id="error-target-platform" role="alert">
+<span class="material-symbols-outlined text-[15px] shrink-0">error</span>
+<span id="error-target-platform-text"></span>
+</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Video Count -->
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase" for="video-count">Number of Videos *</label>
+<input aria-required="true" class="w-full px-4 py-3 rounded-xl bg-surface-container-lowest text-on-surface focus:outline-none focus:ring-1 focus:ring-primary transition-all font-body-md text-body-md" id="video-count" min="1" required="" type="number" value="1"/>
+<p class="hidden text-error font-body-sm text-xs items-center gap-1.5 pt-0.5" id="error-video-count" role="alert">
+<span class="material-symbols-outlined text-[15px] shrink-0">error</span>
+<span id="error-video-count-text"></span>
+</p>
+</div>
+<!-- Duration -->
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase" for="video-duration">Est. Target Duration *</label>
+<input aria-required="true" class="w-full px-4 py-3 rounded-xl bg-surface-container-lowest text-on-surface placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary transition-all font-body-md text-body-md" id="video-duration" placeholder="e.g. 60s or 12 mins" required="" type="text"/>
+<p class="hidden text-error font-body-sm text-xs items-center gap-1.5 pt-0.5" id="error-video-duration" role="alert">
+<span class="material-symbols-outlined text-[15px] shrink-0">error</span>
+<span id="error-video-duration-text"></span>
+</p>
+</div>
+<!-- Budget Range -->
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase" for="budget-tier">Budget Range *</label>
+<select aria-required="true" class="w-full px-4 py-3 rounded-xl bg-surface-container-lowest text-on-surface focus:outline-none focus:ring-1 focus:ring-primary transition-all font-body-md text-body-md" id="budget-tier" required="">
+<option value="tier-basic">Under $56</option>
+<option value="tier-standard">$56 &ndash; $167</option>
+<option value="tier-premium">$167+</option>
+</select>
+<p class="hidden text-error font-body-sm text-xs items-center gap-1.5 pt-0.5" id="error-budget-tier" role="alert">
+<span class="material-symbols-outlined text-[15px] shrink-0">error</span>
+<span id="error-budget-tier-text"></span>
+</p>
+</div>
+</div>
+<!-- Reference Links -->
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase" for="ref-links">Reference Inspiration Links (YouTube, Reels, Drive) <span class="text-outline normal-case font-normal">(optional)</span></label>
+<input class="w-full px-4 py-3 rounded-xl bg-surface-container-lowest text-on-surface placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary transition-all font-body-md text-body-md" id="ref-links" placeholder="https://youtube.com/watch?v=..." type="text"/>
+</div>
+<!-- Project Description -->
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase" for="project-notes">Project Description &amp; Creative Vibe *</label>
+<textarea aria-required="true" class="w-full px-4 py-3 rounded-xl bg-surface-container-lowest text-on-surface placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary transition-all font-body-md text-body-md resize-none" id="project-notes" placeholder="Tell me what you're after: pacing speed, specific sound effects, humor style, deadline constraints..." required="" rows="3"></textarea>
+<p class="hidden text-error font-body-sm text-xs items-center gap-1.5 pt-0.5" id="error-project-notes" role="alert">
+<span class="material-symbols-outlined text-[15px] shrink-0">error</span>
+<span id="error-project-notes-text"></span>
+</p>
+</div>
+<!-- Raw Footage Cloud Link & Drag-and-Drop File Upload -->
+<div class="flex flex-col gap-2.5" id="asset-upload-section">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase" for="asset-link">Raw Footage / Assets &mdash; Google Drive Link <span class="text-primary">or Direct Upload (Up to 500 MB)</span> <span class="text-outline normal-case font-normal">(optional)</span></label>
+<input class="w-full px-4 py-3 rounded-xl bg-surface-container-lowest text-on-surface placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary transition-all font-body-md text-body-md" id="asset-link" placeholder="https://drive.google.com/drive/folders/... or https://drive.google.com/file/d/..." type="text"/>
+<div class="hidden px-3.5 py-2.5 rounded-xl bg-error-container/25 border border-error/40 text-error font-body-sm text-body-sm items-center gap-2" id="asset-link-error" role="alert">
+<span class="material-symbols-outlined text-[18px] shrink-0">error</span>
+<span id="asset-link-error-text"></span>
+</div>
+<div class="px-3.5 py-2.5 rounded-xl bg-surface-container-lowest/80 border border-surface-container-high text-on-surface-variant font-body-sm text-body-sm flex flex-col gap-1" id="gdrive-instructions">
+<p class="leading-relaxed">
+<span class="text-primary font-semibold">Google Drive for 500 MB+ Projects (10 GB, 20 GB+ supported):</span> For projects exceeding 500 MB, upload your footage to Google Drive and paste the file or folder link here. Make sure the sharing permissions allow the editor to access and download your files.
+</p>
+<p class="text-[11px] text-outline leading-relaxed">
+Reminder: Submitting a link does not automatically grant access to its contents. You do not need to make confidential footage public&mdash;you can grant access directly to the editor's email (<span class="text-on-surface font-code-timecode">lunaray.studi0000@gmail.com</span>) in Google Drive.
+</p>
+</div>
+<input accept=".mp4,.mov,.m4v,.mkv,.avi,.webm,.mpeg,.mpg,.wmv,.mp3,.wav,.aac,.flac,.ogg,.m4a,.jpg,.jpeg,.png,.webp,.gif,.zip,.rar,.7z,.prproj,.aep,.drp,.srt,.pdf,video/mp4,video/*,audio/*,image/*" class="hidden" id="asset-file-input" multiple="multiple" type="file"/>
+<div aria-label="Upload or drag and drop raw footage files" class="relative rounded-xl border border-dashed border-outline-variant/60 hover:border-primary/70 bg-surface-container-lowest/60 hover:bg-surface-container-lowest px-4 py-3.5 transition-all cursor-pointer flex flex-col sm:flex-row items-center justify-between gap-3 group select-none" id="asset-dropzone" role="button" tabindex="0">
+<div class="flex items-center gap-3 text-center sm:text-left pointer-events-none">
+<div class="w-9 h-9 rounded-lg bg-surface-container-high text-primary flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-on-primary transition-colors" id="asset-dropzone-icon-wrap">
+<span class="material-symbols-outlined text-[20px]" id="asset-dropzone-icon">upload_file</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-on-surface font-medium" id="asset-dropzone-title">Direct Video / Asset Upload &mdash; Drag &amp; drop or click to browse (Max 500 MB)</span>
+<span class="font-label-sm text-[11px] text-outline" id="asset-dropzone-subtitle">Supports MP4, MOV, MKV, ZIP, Audio &amp; Images up to 500 MB. Files larger than 500 MB must be submitted through Google Drive above.</span>
+</div>
+</div>
+<button class="px-3.5 py-1.5 rounded-lg bg-surface-container-high group-hover:bg-primary group-hover:text-on-primary text-on-surface font-label-sm text-label-sm uppercase tracking-wider transition-colors shrink-0 cursor-pointer" id="asset-dropzone-btn" type="button">Choose File</button>
+</div>
+<div class="hidden px-3.5 py-2.5 rounded-xl bg-error-container/25 border border-error/40 text-error font-body-sm text-body-sm items-center gap-2" id="asset-file-error" role="alert">
+<span class="material-symbols-outlined text-[18px] shrink-0">warning</span>
+<span id="asset-file-error-text"></span>
+</div>
+<div class="hidden flex-col gap-2 pt-1" id="asset-file-list"></div>
+</div>
+<!-- Checkbox terms -->
+<div class="flex flex-col gap-1.5 pt-2">
+<div class="flex items-start gap-3">
+<input aria-required="true" class="mt-1 w-4 h-4 rounded text-primary bg-surface-container-lowest border-surface-container-high focus:ring-primary" id="terms-agree" required="" type="checkbox"/>
+<label class="font-body-sm text-body-sm text-on-surface-variant cursor-pointer" for="terms-agree">
+            I understand that project slots are scheduled based on timeline availability, and I agree to the <a class="text-primary hover:underline font-medium" href="terms.html" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</a> and <a class="text-primary hover:underline font-medium" href="refund-policy.html" target="_blank" rel="noopener noreferrer">Refund &amp; Cancellation Policy</a>. *
+          </label>
+</div>
+<p class="hidden text-error font-body-sm text-xs items-center gap-1.5 pt-0.5" id="error-terms-agree" role="alert">
+<span class="material-symbols-outlined text-[15px] shrink-0">error</span>
+<span id="error-terms-agree-text"></span>
+</p>
+<p class="font-body-sm text-[11px] text-outline leading-relaxed pt-1">
+            Privacy Notice: Your contact details, project brief, and any uploaded footage or Google Drive links are stored in our Supabase backend solely to review your inquiry and provide editing services. Read our <a class="text-primary hover:underline" href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a> for details on data handling and deletion requests.
+          </p>
+</div>
+<!-- Submission Error Feedback -->
+<div class="hidden p-4 rounded-xl bg-error-container/30 border border-error/40 text-error font-body-sm text-body-sm items-center gap-2" id="booking-error-msg" role="alert">
+<span class="material-symbols-outlined text-[18px] shrink-0">error</span>
+<span id="booking-error-text">Unable to save your inquiry right now. Please try again.</span>
+</div>
+<!-- Submit Button -->
+<div class="pt-4">
+<button class="w-full py-4 rounded-xl bg-primary text-on-primary font-headline-md text-body-md hover:bg-primary-container hover:text-on-primary-container shadow-[0_0_24px_rgba(169,155,239,0.35)] transition-all flex items-center justify-center gap-2 group" id="submit-btn" type="submit">
+<span>BOOK MY SLOT</span>
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</form>
+</div>
+</section>
+<!-- ==================== ABOUT THE EDITOR ==================== -->
+<section class="w-full px-6 lg:px-12 py-16 lg:py-24 max-w-7xl mx-auto flex flex-col gap-12" id="about">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+<!-- Companion Artwork / Avatar -->
+<div class="lg:col-span-5 relative">
+<div class="relative w-full aspect-square rounded-3xl overflow-hidden bg-surface-container-lowest shadow-2xl">
+<img alt="Anime girl sitting against a soft sunlit background" class="w-full h-full object-cover object-[72%_center] block" src="videos/about-editor.jpg"/>
+</div>
+</div>
+<!-- Bio & Stats -->
+<div class="lg:col-span-7 flex flex-col gap-6">
+<div class="flex flex-col gap-2">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-widest">BEHIND THE MONITOR</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">JUST AN EDITOR WITH TOO MANY IDEAS.</h2>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+          I'm a video editor who loves turning raw footage into content with real personality. Whether it's hyper-cut retention reels for modern algorithms, cinematic narrative pacing, or anime edits timed down to the musical transient, I believe timing is everything.
+        </p>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+          You bring the idea. We build the vision together without corporate runaround or sterile templates.
+        </p>
+<!-- Stats Grid -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4">
+<div class="p-4 rounded-xl bg-surface-container-low flex flex-col">
+<span class="font-display-lg text-headline-lg text-primary font-bold">5+</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase mt-1">Years Slicing</span>
+</div>
+<div class="p-4 rounded-xl bg-surface-container-low flex flex-col">
+<span class="font-display-lg text-headline-lg text-secondary font-bold">250+</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase mt-1">Edits Delivered</span>
+</div>
+<div class="p-4 rounded-xl bg-surface-container-low flex flex-col">
+<span class="font-display-lg text-headline-lg text-tertiary font-bold">48h</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase mt-1">Avg Turnaround</span>
+</div>
+<div class="p-4 rounded-xl bg-surface-container-low flex flex-col">
+<span class="font-display-lg text-headline-lg text-on-surface font-bold">99.8%</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase mt-1">Render Reliability</span>
+</div>
+</div>
+<!-- Playful Quote Callout -->
+<div class="p-4 rounded-xl bg-surface-container-low/70 flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary text-[24px]">format_quote</span>
+<span class="font-code-timecode text-body-sm text-on-surface-variant italic">
+            "Currently accepting projects. Currently overthinking the color grade."
+          </span>
+</div>
+</div>
+</div>
+</section>
+<!-- ==================== FAQ ACCORDION ==================== -->
+<section class="w-full px-6 lg:px-12 py-16 lg:py-24 max-w-5xl mx-auto flex flex-col gap-10" id="faq">
+<div class="flex flex-col items-center text-center gap-2">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-widest">GOT CONCERNS?</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">QUESTIONS BEFORE WE COOK?</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Everything you need to know about files, revisions, and expectations.</p>
+</div>
+<!-- Accordion List -->
+<div class="flex flex-col gap-3">
+<!-- FAQ 1 -->
+<div class="faq-item rounded-xl bg-surface-container-low overflow-hidden transition-all">
+<button class="w-full p-5 text-left flex items-center justify-between gap-4 font-headline-md text-body-md text-on-surface hover:text-primary transition-colors" onclick="toggleFaq(this)">
+<span>What kind of videos do you edit?</span>
+<span class="material-symbols-outlined faq-icon text-on-surface-variant transition-transform">expand_more</span>
+</button>
+<div class="faq-content hidden px-5 pb-5 font-body-md text-body-md text-on-surface-variant">
+          Almost anything creator or brand-focused: short-form Instagram Reels, TikToks, YouTube Shorts, long-form YouTube vlogs and video essays, anime AMVs and fan edits, promotional teasers, and cinematic product videos.
+        </div>
+</div>
+<!-- FAQ 2 -->
+<div class="faq-item rounded-xl bg-surface-container-low overflow-hidden transition-all">
+<button class="w-full p-5 text-left flex items-center justify-between gap-4 font-headline-md text-body-md text-on-surface hover:text-primary transition-colors" onclick="toggleFaq(this)">
+<span>Can you edit both vertical (9:16) and horizontal (16:9) formats?</span>
+<span class="material-symbols-outlined faq-icon text-on-surface-variant transition-transform">expand_more</span>
+</button>
+<div class="faq-content hidden px-5 pb-5 font-body-md text-body-md text-on-surface-variant">
+          Yes! Every timeline can be calibrated for YouTube widescreen (16:9), Instagram/TikTok vertical (9:16), or exported in multi-format crops with re-framed focus points.
+        </div>
+</div>
+<!-- FAQ 3 -->
+<div class="faq-item rounded-xl bg-surface-container-low overflow-hidden transition-all">
+<button class="w-full p-5 text-left flex items-center justify-between gap-4 font-headline-md text-body-md text-on-surface hover:text-primary transition-colors" onclick="toggleFaq(this)">
+<span>Do you design thumbnails as well?</span>
+<span class="material-symbols-outlined faq-icon text-on-surface-variant transition-transform">expand_more</span>
+</button>
+<div class="faq-content hidden px-5 pb-5 font-body-md text-body-md text-on-surface-variant">
+          Yes, thumbnails are available both as standalone commissions ($17) or bundled alongside video packages to ensure visual consistency between cover art and video content.
+        </div>
+</div>
+<!-- FAQ 4 -->
+<div class="faq-item rounded-xl bg-surface-container-low overflow-hidden transition-all">
+<button class="w-full p-5 text-left flex items-center justify-between gap-4 font-headline-md text-body-md text-on-surface hover:text-primary transition-colors" onclick="toggleFaq(this)">
+<span>How many revision rounds are included?</span>
+<span class="material-symbols-outlined faq-icon text-on-surface-variant transition-transform">expand_more</span>
+</button>
+<div class="faq-content hidden px-5 pb-5 font-body-md text-body-md text-on-surface-variant">
+          Basic loadouts include 1 comprehensive round, Standard includes 2 rounds, and Premium covers 3 full passes. Revisions cover timing, text, audio levels, and clip swaps within the original scope.
+        </div>
+</div>
+<!-- FAQ 5 -->
+<div class="faq-item rounded-xl bg-surface-container-low overflow-hidden transition-all">
+<button class="w-full p-5 text-left flex items-center justify-between gap-4 font-headline-md text-body-md text-on-surface hover:text-primary transition-colors" onclick="toggleFaq(this)">
+<span>What is the usual turnaround time?</span>
+<span class="material-symbols-outlined faq-icon text-on-surface-variant transition-transform">expand_more</span>
+</button>
+<div class="faq-content hidden px-5 pb-5 font-body-md text-body-md text-on-surface-variant">
+          Short-form clips are typically delivered within 24 to 48 hours. Long-form YouTube projects usually take 48 to 72 hours depending on raw footage volume and motion graphics requirements.
+        </div>
+</div>
+<!-- FAQ 6 -->
+<div class="faq-item rounded-xl bg-surface-container-low overflow-hidden transition-all">
+<button class="w-full p-5 text-left flex items-center justify-between gap-4 font-headline-md text-body-md text-on-surface hover:text-primary transition-colors" onclick="toggleFaq(this)">
+<span>Can I provide reference videos and specific music tracks?</span>
+<span class="material-symbols-outlined faq-icon text-on-surface-variant transition-transform">expand_more</span>
+</button>
+<div class="faq-content hidden px-5 pb-5 font-body-md text-body-md text-on-surface-variant">
+          Absolutely encouraged! Reference links give me the exact pacing, tone, and sound design blueprint you're imagining. You can supply audio files or let me pick royalty-free tracks that fit.
+        </div>
+</div>
+<!-- FAQ 7 -->
+<div class="faq-item rounded-xl bg-surface-container-low overflow-hidden transition-all">
+<button class="w-full p-5 text-left flex items-center justify-between gap-4 font-headline-md text-body-md text-on-surface hover:text-primary transition-colors" onclick="toggleFaq(this)">
+<span>Do you guarantee that my video will go viral?</span>
+<span class="material-symbols-outlined faq-icon text-on-surface-variant transition-transform">expand_more</span>
+</button>
+<div class="faq-content hidden px-5 pb-5 font-body-md text-body-md text-on-surface-variant">
+          No editor can honestly guarantee algorithmic virality. What I DO guarantee is high viewer retention, razor-sharp pacing, top-tier audio clarity, and zero amateur rough edges that cause viewers to swipe away.
+        </div>
+</div>
+<!-- FAQ 8 -->
+<div class="faq-item rounded-xl bg-surface-container-low overflow-hidden transition-all">
+<button class="w-full p-5 text-left flex items-center justify-between gap-4 font-headline-md text-body-md text-on-surface hover:text-primary transition-colors" onclick="toggleFaq(this)">
+<span>How do I send you gigabytes of raw footage?</span>
+<span class="material-symbols-outlined faq-icon text-on-surface-variant transition-transform">expand_more</span>
+</button>
+<div class="faq-content hidden px-5 pb-5 font-body-md text-body-md text-on-surface-variant">
+          Google Drive, Dropbox, WeTransfer Pro, or Frame.io. Simply drop the shared link into the booking form with download permissions enabled.
+        </div>
+</div>
+<!-- FAQ 9 -->
+<div class="faq-item rounded-xl bg-surface-container-low overflow-hidden transition-all">
+<button class="w-full p-5 text-left flex items-center justify-between gap-4 font-headline-md text-body-md text-on-surface hover:text-primary transition-colors" onclick="toggleFaq(this)">
+<span>What formats and master resolutions do you deliver?</span>
+<span class="material-symbols-outlined faq-icon text-on-surface-variant transition-transform">expand_more</span>
+</button>
+<div class="faq-content hidden px-5 pb-5 font-body-md text-body-md text-on-surface-variant">
+          Deliveries are typically uncompressed MP4 (H.264/H.265) optimized for social uploads, or Apple ProRes 422 HQ / 4444 master files upon request for archival purposes.
+        </div>
+</div>
+<!-- FAQ 10 -->
+<div class="faq-item rounded-xl bg-surface-container-low overflow-hidden transition-all">
+<button class="w-full p-5 text-left flex items-center justify-between gap-4 font-headline-md text-body-md text-on-surface hover:text-primary transition-colors" onclick="toggleFaq(this)">
+<span>Can we set up a recurring monthly retainer?</span>
+<span class="material-symbols-outlined faq-icon text-on-surface-variant transition-transform">expand_more</span>
+</button>
+<div class="faq-content hidden px-5 pb-5 font-body-md text-body-md text-on-surface-variant">
+          Yes! If you publish weekly or manage a channel schedule, retainer packages guarantee dedicated weekly editing bandwidth at preferential package pricing. Mention it in the booking notes!
+        </div>
+</div>
+</div>
+</section>
+<!-- ==================== CONTACT & INBOX ==================== -->
+<section class="w-full px-6 lg:px-12 py-16 max-w-7xl mx-auto flex flex-col gap-10" id="contact">
+<div class="p-8 sm:p-12 rounded-3xl bg-surface-container-low shadow-xl flex flex-col lg:flex-row items-center justify-between gap-8">
+<div class="flex flex-col gap-3 text-center lg:text-left max-w-xl">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-widest">DIRECT COMMUNICATIONS</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">SLIDE INTO THE INBOX.</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+          Have an unconventional idea, brand sponsorship, or multi-video retainer in mind? Reach out directly across whichever channel you spend the most time on.
+        </p>
+</div>
+<!-- Quick Contact Channels -->
+<div class="flex flex-col sm:flex-row flex-wrap items-center justify-center lg:justify-end gap-4 shrink-0">
+<a class="px-5 py-3 rounded-xl bg-surface-container-high hover:bg-primary hover:text-on-primary text-on-surface transition-all flex items-center justify-center gap-2 font-body-md text-body-md whitespace-nowrap" href="mailto:lunaray.studi0000@gmail.com">
+<span class="material-symbols-outlined text-[20px]">mail</span>
+<span>lunaray.studi0000@gmail.com</span>
+</a>
+<a class="px-6 py-3 rounded-xl bg-primary text-on-primary font-headline-md text-body-md hover:bg-primary-container hover:text-on-primary-container shadow-md transition-all" href="#booking">
+          QUICK INQUIRY →
+        </a>
+</div>
+</div>
+</section>
+<!-- Floating Back to Top Anchor -->
+<button aria-label="Back to top" class="fixed bottom-6 right-6 z-40 w-12 h-12 rounded-full bg-surface-container-high text-primary hover:bg-primary hover:text-on-primary shadow-xl flex items-center justify-center transition-all opacity-80 hover:opacity-100" id="back-to-top-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+<span class="material-symbols-outlined">arrow_upward</span>
+</button>
+</div>
+<!-- ==================== INLINE JAVASCRIPT ==================== -->
+<script>
+  // 1. Portfolio Category Filtering
+  document.querySelectorAll('.portfolio-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.portfolio-tab-btn').forEach(b => {
+        b.classList.remove('bg-primary', 'text-on-primary', 'active');
+        b.classList.add('bg-surface-container-low', 'text-on-surface-variant');
+      });
+      btn.classList.add('bg-primary', 'text-on-primary', 'active');
+      btn.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
+
+      const filter = btn.getAttribute('data-filter');
+      const cards = document.querySelectorAll('.portfolio-card');
+      cards.forEach(card => {
+        const cat = card.getAttribute('data-category');
+        if (filter === 'all' || cat === filter) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+
+  // 2. Interactive Before/After Split Slider
+  const rangeInput = document.getElementById('slider-range-input');
+  const clippedLayer = document.getElementById('slider-clipped-layer');
+  const sliderHandle = document.getElementById('slider-handle');
+  const beforeBadge = document.getElementById('slider-before-badge');
+  const afterBadge = document.getElementById('slider-after-badge');
+
+  function updateSliderPosition(val) {
+    const pct = Math.max(0, Math.min(100, parseFloat(val)));
+    const rightInset = 100 - pct;
+    if (clippedLayer) {
+      clippedLayer.style.clipPath = `inset(0 ${rightInset}% 0 0)`;
+      clippedLayer.style.webkitClipPath = `inset(0 ${rightInset}% 0 0)`;
+    }
+    if (sliderHandle) {
+      sliderHandle.style.left = `${pct}%`;
+    }
+    if (beforeBadge) {
+      beforeBadge.style.opacity = pct < 18 ? '0' : '1';
+    }
+    if (afterBadge) {
+      afterBadge.style.opacity = pct > 82 ? '0' : '1';
+    }
+  }
+
+  if (rangeInput) {
+    rangeInput.addEventListener('input', (e) => {
+      updateSliderPosition(e.target.value);
+    });
+  }
+
+  function switchSliderMode(mode) {
+    const tabColor = document.getElementById('slider-tab-color');
+    const tabSubtitles = document.getElementById('slider-tab-subtitles');
+    const beforeImg = document.getElementById('slider-before-img');
+    const afterImg = document.getElementById('slider-after-img');
+    const beforeLabel = document.getElementById('slider-before-label');
+    const afterLabel = document.getElementById('slider-after-label');
+
+    const activeClass = "px-5 py-2.5 rounded-xl bg-primary text-on-primary font-body-md text-[13px] sm:text-sm font-semibold tracking-wide shadow-[0_2px_12px_rgba(202,190,255,0.35)] transition-all text-center";
+    const inactiveClass = "px-5 py-2.5 rounded-xl text-on-surface/80 hover:text-on-surface hover:bg-white/[0.04] font-body-md text-[13px] sm:text-sm font-medium tracking-wide transition-all text-center";
+
+    if (mode === 'color') {
+      if (tabColor) tabColor.className = activeClass;
+      if (tabSubtitles) tabSubtitles.className = inactiveClass;
+      if (beforeImg) {
+        beforeImg.src = "videos/compare-log-before.jpg";
+        beforeImg.setAttribute('data-alt', "Unedited flat desaturated logarithmic raw camera footage with washed out shadows and no color correction.");
+      }
+      if (afterImg) {
+        afterImg.src = "videos/compare-grade-after.jpg";
+        afterImg.setAttribute('data-alt', "Finished 4K cinematic video frame in vivid deep contrast, glowing lavender neon hues, film grain, and crisp saturation.");
+      }
+      if (beforeLabel) beforeLabel.textContent = "RAW LOG FOOTAGE";
+      if (afterLabel) afterLabel.textContent = "GRADED & POLISHED 4K MASTER";
+    } else {
+      if (tabSubtitles) tabSubtitles.className = activeClass;
+      if (tabColor) tabColor.className = inactiveClass;
+      if (beforeImg) {
+        beforeImg.src = "videos/compare-rawcut-before.jpg";
+        beforeImg.setAttribute('data-alt', "Static rough cut timeline frame without motion graphics, subtitles, or dynamic zooms.");
+      }
+      if (afterImg) {
+        afterImg.src = "videos/compare-kinetic-after.jpg";
+        afterImg.setAttribute('data-alt', "Polished timeline frame with kinetic animated subtitle typography, motion trails, sound wave accents, and zoom focus.");
+      }
+      if (beforeLabel) beforeLabel.textContent = "UNEDITED RAW CUT";
+      if (afterLabel) afterLabel.textContent = "KINETIC MOTION MASTER";
+    }
+  }
+
+  // 3. FAQ Accordion Toggle
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const content = item.querySelector('.faq-content');
+    const icon = btn.querySelector('.faq-icon');
+    const isOpen = !content.classList.contains('hidden');
+
+    // Close all FAQs first
+    document.querySelectorAll('.faq-content').forEach(c => c.classList.add('hidden'));
+    document.querySelectorAll('.faq-icon').forEach(i => i.style.transform = 'rotate(0deg)');
+
+    if (!isOpen) {
+      content.classList.remove('hidden');
+      icon.style.transform = 'rotate(180deg)';
+    }
+  }
+
+  // 4. Booking Form Submission State (Connected to Supabase Backend)
+  window.__bookingSource = 'website_booking_form';
+
+  document.querySelectorAll('a[href="#booking"]').forEach(link => {
+    link.addEventListener('click', () => {
+      const label = (link.textContent || '').trim().toUpperCase();
+      const projectSelect = document.getElementById('project-type');
+      const budgetSelect = document.getElementById('budget-tier');
+
+      if (label.includes('REEL')) {
+        if (projectSelect) projectSelect.value = 'short-form';
+        window.__bookingSource = 'service_short_form';
+      } else if (label.includes('EDIT MY VIDEO')) {
+        if (projectSelect) projectSelect.value = 'youtube-long';
+        window.__bookingSource = 'service_youtube_long';
+      } else if (label.includes('CREATE AN EDIT')) {
+        if (projectSelect) projectSelect.value = 'anime-amv';
+        window.__bookingSource = 'service_anime_amv';
+      } else if (label.includes('LEVEL UP MY VIDEO')) {
+        if (projectSelect) projectSelect.value = 'commercial';
+        window.__bookingSource = 'service_commercial';
+      } else if (label.includes('FIX MY AUDIO')) {
+        if (projectSelect) projectSelect.value = 'audio-sound';
+        window.__bookingSource = 'service_audio_post';
+      } else if (label.includes('THUMBNAIL')) {
+        if (projectSelect) projectSelect.value = 'thumbnail-only';
+        window.__bookingSource = 'service_thumbnail';
+      } else if (label.includes('START SIMPLE')) {
+        if (budgetSelect) budgetSelect.value = 'tier-basic';
+        window.__bookingSource = 'pricing_tier_basic';
+      } else if (label.includes("LET'S LEVEL UP")) {
+        if (budgetSelect) budgetSelect.value = 'tier-standard';
+        window.__bookingSource = 'pricing_tier_standard';
+      } else if (label.includes('UNLOCK PREMIUM')) {
+        if (budgetSelect) budgetSelect.value = 'tier-premium';
+        window.__bookingSource = 'pricing_tier_premium';
+      } else if (label.includes('QUICK INQUIRY')) {
+        window.__bookingSource = 'contact_quick_inquiry';
+      } else {
+        window.__bookingSource = 'website_cta';
+      }
+    });
+  });
+
+  // 4b. Drag & Drop, 500 MB Direct Upload Limit, Google Drive Link Validation, and Full Form Validation
+  window.__droppedAssetFiles = [];
+  window.__isSubmittingBooking = false;
+
+  const ALLOWED_ASSET_EXTENSIONS = new Set([
+    'mp4', 'mov', 'm4v', 'mkv', 'avi', 'webm', 'mpeg', 'mpg', 'wmv', 'flv', 'ts', 'm2ts',
+    'mp3', 'wav', 'aac', 'flac', 'ogg', 'm4a',
+    'jpg', 'jpeg', 'png', 'webp', 'gif', 'svg', 'bmp', 'tiff',
+    'zip', 'rar', '7z', 'tar', 'gz',
+    'prproj', 'aep', 'drp', 'xml', 'fcpxml', 'edl', 'srt', 'vtt', 'ass', 'cube', 'pdf', 'txt'
+  ]);
+
+  const BLOCKED_ASSET_EXTENSIONS = new Set([
+    'exe', 'msi', 'bat', 'cmd', 'com', 'scr', 'pif', 'vbs', 'vbe', 'js', 'jse', 'wsf', 'wsh', 'ps1', 'dll', 'sys', 'sh'
+  ]);
+
+  const MAX_ASSET_FILE_BYTES = 500 * 1024 * 1024; // 500 MB strict direct upload limit
+  const VALID_PROJECT_TYPES = new Set(['short-form', 'youtube-long', 'anime-amv', 'commercial', 'audio-sound', 'thumbnail-only']);
+  const VALID_PLATFORMS = new Set(['youtube', 'instagram', 'cross-platform', 'other']);
+  const VALID_BUDGET_TIERS = new Set(['tier-basic', 'tier-standard', 'tier-premium']);
+  const EMAIL_FORMAT_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  function formatAssetBytes(bytes) {
+    if (!Number.isFinite(bytes) || bytes < 0) return '0 B';
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+  }
+
+  function setFieldError(fieldId, errorId, message) {
+    const fieldEl = document.getElementById(fieldId);
+    const errBox = document.getElementById(errorId);
+    const errText = document.getElementById(errorId + '-text');
+    if (errBox && errText) {
+      if (!message) {
+        errBox.classList.add('hidden');
+        errBox.classList.remove('flex');
+        errText.textContent = '';
+      } else {
+        errText.textContent = message;
+        errBox.classList.remove('hidden');
+        errBox.classList.add('flex');
+      }
+    }
+    if (fieldEl) {
+      if (!message) {
+        fieldEl.classList.remove('ring-1', 'ring-error', 'border-error');
+        fieldEl.removeAttribute('aria-invalid');
+      } else {
+        fieldEl.classList.add('ring-1', 'ring-error', 'border-error');
+        fieldEl.setAttribute('aria-invalid', 'true');
+      }
+    }
+  }
+
+  function showAssetFileError(msg) {
+    const errBox = document.getElementById('asset-file-error');
+    const errText = document.getElementById('asset-file-error-text');
+    if (!errBox || !errText) return;
+    if (!msg) {
+      errBox.classList.add('hidden');
+      errBox.classList.remove('flex');
+      errText.textContent = '';
+    } else {
+      errText.textContent = msg;
+      errBox.classList.remove('hidden');
+      errBox.classList.add('flex');
+    }
+  }
+
+  function showAssetLinkError(msg, highlightDropzone) {
+    const errBox = document.getElementById('asset-link-error');
+    const errText = document.getElementById('asset-link-error-text');
+    const linkInput = document.getElementById('asset-link');
+    const dropzone = document.getElementById('asset-dropzone');
+    if (!errBox || !errText) return;
+    if (!msg) {
+      errBox.classList.add('hidden');
+      errBox.classList.remove('flex');
+      errText.textContent = '';
+      if (linkInput) {
+        linkInput.classList.remove('ring-1', 'ring-error', 'border-error');
+        linkInput.removeAttribute('aria-invalid');
+      }
+      if (dropzone) {
+        dropzone.classList.remove('ring-1', 'ring-error', 'border-error');
+      }
+    } else {
+      errText.textContent = msg;
+      errBox.classList.remove('hidden');
+      errBox.classList.add('flex');
+      if (linkInput) {
+        linkInput.classList.add('ring-1', 'ring-error', 'border-error');
+        linkInput.setAttribute('aria-invalid', 'true');
+      }
+      if (dropzone) {
+        if (highlightDropzone) {
+          dropzone.classList.add('ring-1', 'ring-error', 'border-error');
+        } else {
+          dropzone.classList.remove('ring-1', 'ring-error', 'border-error');
+        }
+      }
+    }
+  }
+
+  /**
+   * Validates that a non-empty link input contains valid Google Drive file or folder link(s).
+   * Accepts both individual file links (/file/d/<id>, /open?id=<id>, /uc?id=<id>)
+   * and folder links (/drive/folders/<id>, /drive/u/0/folders/<id>, /folderview?id=<id>)
+   * of any total project size (10 GB, 20 GB, etc.) without downloading anything.
+   */
+  function validateGoogleDriveLink(rawInput) {
+    const trimmed = (rawInput || '').trim();
+    if (!trimmed) {
+      return { valid: true, normalized: '' };
+    }
+
+    const tokens = trimmed
+      .split(/[\s,|]+/)
+      .map(t => t.trim())
+      .filter(Boolean);
+
+    const normalizedUrls = [];
+
+    for (const token of tokens) {
+      const candidate = /^https?:\/\//i.test(token) ? token : 'https://' + token;
+      let parsed;
+      try {
+        parsed = new URL(candidate);
+      } catch (_) {
+        return {
+          valid: false,
+          reason: '"' + token + '" is not a valid URL. Please paste a valid Google Drive file or folder link (e.g., https://drive.google.com/file/d/... or https://drive.google.com/drive/folders/...).'
+        };
+      }
+
+      const host = parsed.hostname.toLowerCase();
+      const path = parsed.pathname;
+      const idParam = parsed.searchParams.get('id') || '';
+
+      const isGoogleDriveHost =
+        host === 'drive.google.com' ||
+        host === 'www.drive.google.com' ||
+        host === 'docs.google.com';
+
+      if (!isGoogleDriveHost) {
+        return {
+          valid: false,
+          reason: 'Invalid link host "' + parsed.hostname + '". Please paste a valid Google Drive file or folder URL (https://drive.google.com/file/d/... or https://drive.google.com/drive/folders/...).'
+        };
+      }
+
+      if (/^\/drive\/(u\/\d+\/)?my-drive\/?$/i.test(path) || path === '/' || path === '/drive' || path === '/drive/') {
+        return {
+          valid: false,
+          reason: 'That link points to the generic Google Drive home page rather than a specific shared file or folder. Right-click your file or folder in Google Drive, select "Share" -> "Copy link", and paste that link here.'
+        };
+      }
+
+      const isFileUrl = /^\/file\/(u\/\d+\/)?d\/([a-zA-Z0-9_-]{10,})(\/|$)/i.test(path);
+      const isFolderUrl = /^\/drive\/((u\/\d+|mobile)\/)?folders\/([a-zA-Z0-9_-]{10,})(\/|$)/i.test(path);
+      const isQueryIdUrl = /^\/(open|uc|folderview)\/?$/i.test(path) && /^[a-zA-Z0-9_-]{10,}$/.test(idParam);
+
+      if (!isFileUrl && !isFolderUrl && !isQueryIdUrl) {
+        return {
+          valid: false,
+          reason: 'Incomplete or unrecognized Google Drive URL ("' + token + '"). Please use a valid Google Drive file link (https://drive.google.com/file/d/<ID>/view) or folder link (https://drive.google.com/drive/folders/<ID>).'
+        };
+      }
+
+      normalizedUrls.push(parsed.href);
+    }
+
+    return { valid: true, normalized: normalizedUrls.join(' | ') };
+  }
+
+  function validateClientNameField() {
+    const el = document.getElementById('client-name');
+    const val = (el?.value || '').trim();
+    if (!val) {
+      setFieldError('client-name', 'error-client-name', 'Please enter your full name.');
+      return { valid: false, element: el };
+    }
+    setFieldError('client-name', 'error-client-name', '');
+    return { valid: true, value: val };
+  }
+
+  function validateClientEmailField() {
+    const el = document.getElementById('client-email');
+    const val = (el?.value || '').trim();
+    if (!val) {
+      setFieldError('client-email', 'error-client-email', 'Please enter your email address.');
+      return { valid: false, element: el };
+    }
+    if (!EMAIL_FORMAT_REGEX.test(val)) {
+      setFieldError('client-email', 'error-client-email', 'Please enter a valid email address (e.g., name@example.com).');
+      return { valid: false, element: el };
+    }
+    setFieldError('client-email', 'error-client-email', '');
+    return { valid: true, value: val };
+  }
+
+  function validateProjectTypeField() {
+    const el = document.getElementById('project-type');
+    const val = (el?.value || '').trim();
+    if (!VALID_PROJECT_TYPES.has(val)) {
+      setFieldError('project-type', 'error-project-type', 'Please select a project type.');
+      return { valid: false, element: el };
+    }
+    setFieldError('project-type', 'error-project-type', '');
+    return { valid: true, value: val };
+  }
+
+  function validateTargetPlatformField() {
+    const el = document.getElementById('target-platform');
+    const val = (el?.value || '').trim();
+    if (!VALID_PLATFORMS.has(val)) {
+      setFieldError('target-platform', 'error-target-platform', 'Please select a target platform.');
+      return { valid: false, element: el };
+    }
+    setFieldError('target-platform', 'error-target-platform', '');
+    return { valid: true, value: val };
+  }
+
+  function validateVideoCountField() {
+    const el = document.getElementById('video-count');
+    const raw = (el?.value || '').trim();
+    const parsed = Number(raw);
+    if (!raw || !/^\d+$/.test(raw) || !Number.isInteger(parsed) || parsed < 1) {
+      setFieldError('video-count', 'error-video-count', 'Please enter the number of videos (at least 1).');
+      return { valid: false, element: el };
+    }
+    setFieldError('video-count', 'error-video-count', '');
+    return { valid: true, value: parsed };
+  }
+
+  function validateVideoDurationField() {
+    const el = document.getElementById('video-duration');
+    const val = (el?.value || '').trim();
+    if (!val) {
+      setFieldError('video-duration', 'error-video-duration', 'Please enter your estimated target duration (e.g., 60s or 12 mins).');
+      return { valid: false, element: el };
+    }
+    setFieldError('video-duration', 'error-video-duration', '');
+    return { valid: true, value: val };
+  }
+
+  function validateBudgetTierField() {
+    const el = document.getElementById('budget-tier');
+    const val = (el?.value || '').trim();
+    if (!VALID_BUDGET_TIERS.has(val)) {
+      setFieldError('budget-tier', 'error-budget-tier', 'Please select a budget range.');
+      return { valid: false, element: el };
+    }
+    setFieldError('budget-tier', 'error-budget-tier', '');
+    return { valid: true, value: val };
+  }
+
+  function validateProjectNotesField() {
+    const el = document.getElementById('project-notes');
+    const val = (el?.value || '').trim();
+    if (!val) {
+      setFieldError('project-notes', 'error-project-notes', 'Please describe your project and creative vibe.');
+      return { valid: false, element: el };
+    }
+    setFieldError('project-notes', 'error-project-notes', '');
+    return { valid: true, value: val };
+  }
+
+  function validateFootageSectionField() {
+    const linkInput = document.getElementById('asset-link');
+    const trimmedLink = (linkInput?.value || '').trim();
+
+    if (trimmedLink) {
+      const linkCheck = validateGoogleDriveLink(trimmedLink);
+      if (!linkCheck.valid) {
+        showAssetLinkError(linkCheck.reason, false);
+        return { valid: false, element: linkInput };
+      }
+      showAssetLinkError('', false);
+      return { valid: true, normalizedLink: linkCheck.normalized };
+    }
+
+    showAssetLinkError('', false);
+    return { valid: true, normalizedLink: '' };
+  }
+
+  function validateTermsAgreeField() {
+    const el = document.getElementById('terms-agree');
+    if (!el || !el.checked) {
+      setFieldError('terms-agree', 'error-terms-agree', 'Please agree to the project scheduling and revision scope terms.');
+      return { valid: false, element: el };
+    }
+    setFieldError('terms-agree', 'error-terms-agree', '');
+    return { valid: true, value: true };
+  }
+
+  /**
+   * Validates all required fields simultaneously so all missing/invalid fields
+   * display clear inline error messages at once.
+   */
+  function validateAllBookingFields() {
+    const results = [
+      validateClientNameField(),
+      validateClientEmailField(),
+      validateProjectTypeField(),
+      validateTargetPlatformField(),
+      validateVideoCountField(),
+      validateVideoDurationField(),
+      validateBudgetTierField(),
+      validateProjectNotesField(),
+      validateFootageSectionField(),
+      validateTermsAgreeField()
+    ];
+
+    const firstInvalid = results.find(r => !r.valid);
+    return {
+      valid: !firstInvalid,
+      firstInvalidEl: firstInvalid ? firstInvalid.element : null,
+      normalizedDriveLink: results[8].normalizedLink || ''
+    };
+  }
+
+  function validateAssetFile(file) {
+    if (!file || typeof file.name !== 'string') {
+      return { valid: false, reason: 'Invalid file object received.' };
+    }
+    if (file.size === 0) {
+      return { valid: false, reason: '"' + file.name + '" is empty (0 bytes).' };
+    }
+    if (file.size > MAX_ASSET_FILE_BYTES) {
+      return {
+        valid: false,
+        reason: '"' + file.name + '" (' + formatAssetBytes(file.size) + ') exceeds the 500 MB direct upload limit. Files larger than 500 MB must be uploaded to Google Drive and submitted using the Google Drive link field above.'
+      };
+    }
+
+    const parts = file.name.toLowerCase().split('.');
+    const ext = parts.length > 1 ? parts.pop().trim() : '';
+    const mime = (file.type || '').toLowerCase().trim();
+
+    if (ext && BLOCKED_ASSET_EXTENSIONS.has(ext)) {
+      return {
+        valid: false,
+        reason: '"' + file.name + '" is an executable/script file and cannot be uploaded. Please select a video (MP4, MOV, MKV), audio, image, or archive file.'
+      };
+    }
+
+    const isAllowedExt = ext && ALLOWED_ASSET_EXTENSIONS.has(ext);
+    const isAllowedMime =
+      mime === 'video/mp4' ||
+      mime === 'application/mp4' ||
+      mime.startsWith('video/') ||
+      mime.startsWith('audio/') ||
+      mime.startsWith('image/') ||
+      mime === 'application/zip' ||
+      mime === 'application/x-zip-compressed' ||
+      mime === 'application/x-rar-compressed' ||
+      mime === 'application/x-7z-compressed' ||
+      mime === 'application/pdf';
+
+    if (!isAllowedExt && !isAllowedMime) {
+      return {
+        valid: false,
+        reason: '"' + file.name + '" is not a supported footage/asset format. Supported formats include MP4, MOV, MKV, AVI, WEBM, MP3, WAV, PNG, JPG, and ZIP.'
+      };
+    }
+
+    return { valid: true };
+  }
+
+  function renderDroppedAssetFiles() {
+    const listEl = document.getElementById('asset-file-list');
+    const dropzone = document.getElementById('asset-dropzone');
+    const dzTitle = document.getElementById('asset-dropzone-title');
+    const dzSubtitle = document.getElementById('asset-dropzone-subtitle');
+    const dzIcon = document.getElementById('asset-dropzone-icon');
+    const dzBtn = document.getElementById('asset-dropzone-btn');
+    const linkInput = document.getElementById('asset-link');
+
+    if (!listEl) return;
+    listEl.innerHTML = '';
+
+    const files = window.__droppedAssetFiles || [];
+
+    if (!files.length) {
+      listEl.classList.add('hidden');
+      listEl.classList.remove('flex');
+      if (dropzone) {
+        dropzone.classList.remove('border-primary', 'bg-primary/10');
+      }
+      if (dzIcon) dzIcon.textContent = 'upload_file';
+      if (dzTitle) dzTitle.textContent = 'Direct Video / Asset Upload \u2014 Drag & drop or click to browse (Max 500 MB)';
+      if (dzSubtitle) dzSubtitle.textContent = 'Supports MP4, MOV, MKV, ZIP, Audio & Images up to 500 MB. Files larger than 500 MB must be submitted through Google Drive above.';
+      if (dzBtn) dzBtn.textContent = 'Choose File';
+      if (linkInput) {
+        linkInput.placeholder = 'https://drive.google.com/drive/folders/... or https://drive.google.com/file/d/...';
+      }
+      return;
+    }
+
+    listEl.classList.remove('hidden');
+    listEl.classList.add('flex');
+
+    const namesSummary = files.map(f => f.name).join(', ');
+    if (dropzone) {
+      dropzone.classList.remove('ring-1', 'ring-error', 'border-error');
+      dropzone.classList.add('border-primary', 'bg-primary/10');
+    }
+    if (dzIcon) dzIcon.textContent = 'check_circle';
+    if (dzTitle) {
+      dzTitle.textContent = files.length === 1
+        ? 'Selected file: ' + files[0].name + ' (' + formatAssetBytes(files[0].size) + ')'
+        : files.length + ' files selected: ' + namesSummary;
+    }
+    if (dzSubtitle) {
+      dzSubtitle.textContent = 'Ready to attach with your booking - click or drop to add more files (up to 500 MB)';
+    }
+    if (dzBtn) dzBtn.textContent = 'Add More';
+    if (linkInput && !linkInput.value.trim()) {
+      linkInput.placeholder = 'Attached: ' + namesSummary + ' (or paste an extra Google Drive link here)';
+      showAssetLinkError('', false);
+    }
+
+    files.forEach((file, idx) => {
+      const row = document.createElement('div');
+      row.className = 'flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl bg-surface-container-lowest border border-primary/40 text-on-surface font-body-sm text-body-sm';
+
+      const leftDiv = document.createElement('div');
+      leftDiv.className = 'flex items-center gap-2.5 min-w-0';
+
+      const iconSpan = document.createElement('span');
+      iconSpan.className = 'material-symbols-outlined text-primary text-[18px] shrink-0';
+      const isVideo = (file.type && file.type.startsWith('video/')) || /\.(mp4|mov|m4v|mkv|avi|webm)$/i.test(file.name);
+      iconSpan.textContent = isVideo ? 'movie' : 'attach_file';
+
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'truncate font-medium text-on-surface';
+      nameSpan.textContent = file.name;
+
+      const sizeSpan = document.createElement('span');
+      sizeSpan.className = 'font-code-timecode text-[11px] text-primary shrink-0';
+      sizeSpan.textContent = '(' + formatAssetBytes(file.size) + ')';
+
+      leftDiv.appendChild(iconSpan);
+      leftDiv.appendChild(nameSpan);
+      leftDiv.appendChild(sizeSpan);
+
+      const removeBtn = document.createElement('button');
+      removeBtn.type = 'button';
+      removeBtn.className = 'text-outline hover:text-error transition-colors px-2.5 py-1 rounded-lg bg-surface-container-high text-xs flex items-center gap-1 shrink-0 cursor-pointer';
+      removeBtn.title = 'Remove file';
+      removeBtn.innerHTML = '<span class="material-symbols-outlined text-[15px]">close</span><span>Remove</span>';
+      removeBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        window.__droppedAssetFiles.splice(idx, 1);
+        const fileInput = document.getElementById('asset-file-input');
+        if (fileInput) fileInput.value = '';
+        showAssetFileError('');
+        renderDroppedAssetFiles();
+      });
+
+      row.appendChild(leftDiv);
+      row.appendChild(removeBtn);
+      listEl.appendChild(row);
+    });
+  }
+
+  function addAssetFiles(fileList) {
+    if (!fileList || !fileList.length) return;
+    const incoming = Array.from(fileList);
+    const errors = [];
+
+    let currentTotalBytes = (window.__droppedAssetFiles || []).reduce((sum, f) => sum + (f.size || 0), 0);
+
+    incoming.forEach(file => {
+      const check = validateAssetFile(file);
+      if (!check.valid) {
+        errors.push(check.reason);
+        return;
+      }
+      const duplicateIdx = window.__droppedAssetFiles.findIndex(
+        f => f.name === file.name && f.size === file.size && f.lastModified === file.lastModified
+      );
+      const addedSize = duplicateIdx !== -1 ? 0 : file.size;
+      if (currentTotalBytes + addedSize > MAX_ASSET_FILE_BYTES) {
+        errors.push('Total direct upload size cannot exceed 500 MB. For projects exceeding 500 MB, please upload your footage to Google Drive and paste the file or folder link above.');
+        return;
+      }
+      if (duplicateIdx !== -1) {
+        window.__droppedAssetFiles[duplicateIdx] = file;
+      } else {
+        window.__droppedAssetFiles.push(file);
+        currentTotalBytes += file.size;
+      }
+    });
+
+    if (errors.length > 0) {
+      showAssetFileError(errors.join(' '));
+    } else {
+      showAssetFileError('');
+    }
+
+    renderDroppedAssetFiles();
+  }
+
+  function extractDroppedFiles(dataTransfer) {
+    if (!dataTransfer) return [];
+    if (dataTransfer.files && dataTransfer.files.length > 0) {
+      return Array.from(dataTransfer.files);
+    }
+    if (dataTransfer.items && dataTransfer.items.length > 0) {
+      const extracted = [];
+      for (let i = 0; i < dataTransfer.items.length; i++) {
+        const item = dataTransfer.items[i];
+        if (item.kind === 'file') {
+          const f = item.getAsFile();
+          if (f) extracted.push(f);
+        }
+      }
+      return extracted;
+    }
+    return [];
+  }
+
+  (function initAssetDropzoneAndValidation() {
+    const dropzone = document.getElementById('asset-dropzone');
+    const dropzoneBtn = document.getElementById('asset-dropzone-btn');
+    const fileInput = document.getElementById('asset-file-input');
+    const linkInput = document.getElementById('asset-link');
+    const uploadSection = document.getElementById('asset-upload-section');
+
+    function openPicker(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      if (fileInput) {
+        fileInput.value = '';
+        fileInput.click();
+      }
+    }
+
+    if (dropzone) {
+      dropzone.addEventListener('click', openPicker);
+      dropzone.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          openPicker(e);
+        }
+      });
+    }
+
+    if (dropzoneBtn) {
+      dropzoneBtn.addEventListener('click', openPicker);
+    }
+
+    if (fileInput) {
+      fileInput.addEventListener('change', () => {
+        if (fileInput.files && fileInput.files.length > 0) {
+          const selectedCopy = Array.from(fileInput.files);
+          addAssetFiles(selectedCopy);
+        }
+        fileInput.value = '';
+      });
+    }
+
+    // Attach live validation listeners so errors clear automatically as the user fixes each field
+    const fieldBindings = [
+      { id: 'client-name', errId: 'error-client-name', fn: validateClientNameField },
+      { id: 'client-email', errId: 'error-client-email', fn: validateClientEmailField },
+      { id: 'project-type', errId: 'error-project-type', fn: validateProjectTypeField },
+      { id: 'target-platform', errId: 'error-target-platform', fn: validateTargetPlatformField },
+      { id: 'video-count', errId: 'error-video-count', fn: validateVideoCountField },
+      { id: 'video-duration', errId: 'error-video-duration', fn: validateVideoDurationField },
+      { id: 'budget-tier', errId: 'error-budget-tier', fn: validateBudgetTierField },
+      { id: 'project-notes', errId: 'error-project-notes', fn: validateProjectNotesField },
+      { id: 'terms-agree', errId: 'error-terms-agree', fn: validateTermsAgreeField }
+    ];
+
+    fieldBindings.forEach(({ id, errId, fn }) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('input', () => {
+        const errBox = document.getElementById(errId);
+        if (errBox && !errBox.classList.contains('hidden')) {
+          fn();
+        }
+      });
+      el.addEventListener('change', () => {
+        const errBox = document.getElementById(errId);
+        if (errBox && !errBox.classList.contains('hidden')) {
+          fn();
+        }
+      });
+    });
+
+    if (linkInput) {
+      linkInput.addEventListener('blur', () => {
+        validateFootageSectionField();
+      });
+      linkInput.addEventListener('input', () => {
+        const errBox = document.getElementById('asset-link-error');
+        if (errBox && !errBox.classList.contains('hidden')) {
+          validateFootageSectionField();
+        }
+      });
+    }
+
+    [dropzone, linkInput, uploadSection].forEach(targetEl => {
+      if (!targetEl) return;
+
+      targetEl.addEventListener('dragenter', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (dropzone) {
+          dropzone.classList.add('border-primary', 'bg-primary/10');
+        }
+      });
+
+      targetEl.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.dataTransfer) {
+          e.dataTransfer.dropEffect = 'copy';
+        }
+        if (dropzone) {
+          dropzone.classList.add('border-primary', 'bg-primary/10');
+        }
+      });
+
+      targetEl.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (targetEl.contains(e.relatedTarget)) return;
+        if (dropzone && (!window.__droppedAssetFiles || !window.__droppedAssetFiles.length)) {
+          dropzone.classList.remove('border-primary', 'bg-primary/10');
+        }
+      });
+
+      targetEl.addEventListener('drop', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const droppedFiles = extractDroppedFiles(e.dataTransfer);
+        if (droppedFiles.length > 0) {
+          addAssetFiles(droppedFiles);
+          return;
+        }
+        const droppedText = (e.dataTransfer && (e.dataTransfer.getData('text/uri-list') || e.dataTransfer.getData('text/plain')) || '').trim();
+        if (droppedText && linkInput) {
+          linkInput.value = droppedText;
+          validateFootageSectionField();
+        }
+        if (dropzone && (!window.__droppedAssetFiles || !window.__droppedAssetFiles.length)) {
+          dropzone.classList.remove('border-primary', 'bg-primary/10');
+        }
+      });
+    });
+
+    window.addEventListener('dragover', (e) => {
+      if (e.dataTransfer && Array.from(e.dataTransfer.types || []).includes('Files')) {
+        e.preventDefault();
+      }
+    });
+    window.addEventListener('drop', (e) => {
+      if (e.dataTransfer && Array.from(e.dataTransfer.types || []).includes('Files')) {
+        e.preventDefault();
+      }
+    });
+  })();
+
+  async function handleBookingSubmit(event) {
+    if (event) event.preventDefault();
+
+    // Prevent duplicate submissions while a request is already in flight
+    if (window.__isSubmittingBooking) {
+      return;
+    }
+
+    const form = document.getElementById('studio-booking-form');
+    const success = document.getElementById('booking-success-state');
+    const submitBtn = document.getElementById('submit-btn');
+    const errorBox = document.getElementById('booking-error-msg');
+    const errorText = document.getElementById('booking-error-text');
+
+    if (errorBox) {
+      errorBox.classList.add('hidden');
+      errorBox.classList.remove('flex');
+    }
+
+    // Validate all required fields at once
+    const validation = validateAllBookingFields();
+    if (!validation.valid) {
+      if (validation.firstInvalidEl) {
+        if (typeof validation.firstInvalidEl.focus === 'function') {
+          validation.firstInvalidEl.focus({ preventScroll: true });
+        }
+        validation.firstInvalidEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
+
+    const fullName = (document.getElementById('client-name')?.value || '').trim();
+    const email = (document.getElementById('client-email')?.value || '').trim();
+    const creatorHandle = (document.getElementById('client-handle')?.value || '').trim() || null;
+    const projectType = (document.getElementById('project-type')?.value || '').trim();
+    const targetPlatform = (document.getElementById('target-platform')?.value || '').trim();
+    const videoCount = parseInt((document.getElementById('video-count')?.value || '').trim(), 10);
+    const targetDuration = (document.getElementById('video-duration')?.value || '').trim();
+    const budgetSelect = document.getElementById('budget-tier');
+    const budgetTier = (budgetSelect?.value || '').trim();
+    const budgetLabel = budgetSelect?.options?.[budgetSelect.selectedIndex]?.text?.trim() || null;
+    const referenceLinks = (document.getElementById('ref-links')?.value || '').trim() || null;
+    const projectDescription = (document.getElementById('project-notes')?.value || '').trim();
+    const termsAccepted = Boolean(document.getElementById('terms-agree')?.checked);
+
+    window.__isSubmittingBooking = true;
+    const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.classList.add('opacity-75', 'cursor-wait');
+      submitBtn.innerHTML = '<span>SAVING INQUIRY...</span><span class="material-symbols-outlined animate-spin">progress_activity</span>';
+    }
+
+    try {
+      let uploadedUrls = [];
+      if (window.__droppedAssetFiles && window.__droppedAssetFiles.length && typeof window.uploadProjectAssetsToSupabase === 'function') {
+        if (submitBtn) {
+          submitBtn.innerHTML = '<span>ATTACHING FILES...</span><span class="material-symbols-outlined animate-spin">progress_activity</span>';
+        }
+        uploadedUrls = await window.uploadProjectAssetsToSupabase(window.__droppedAssetFiles);
+        if (submitBtn) {
+          submitBtn.innerHTML = '<span>SAVING INQUIRY...</span><span class="material-symbols-outlined animate-spin">progress_activity</span>';
+        }
+      }
+
+      const normalizedDriveLink = validation.normalizedDriveLink || '';
+      const combinedAssets = [normalizedDriveLink, ...uploadedUrls].filter(Boolean).join(' | ') || null;
+
+      const payload = {
+        full_name: fullName,
+        email: email,
+        creator_handle: creatorHandle,
+        project_type: projectType,
+        target_platform: targetPlatform,
+        video_count: videoCount,
+        target_duration: targetDuration,
+        budget_tier: budgetTier,
+        budget_label: budgetLabel,
+        reference_links: referenceLinks,
+        project_description: projectDescription,
+        raw_footage_link: combinedAssets,
+        terms_accepted: termsAccepted,
+        record_type: 'project_submission',
+        source: window.__bookingSource || 'website_booking_form'
+      };
+
+      if (typeof window.submitProjectInquiryToSupabase === 'function') {
+        await window.submitProjectInquiryToSupabase(payload);
+      }
+      window.__droppedAssetFiles = [];
+      showAssetFileError('');
+      showAssetLinkError('', false);
+      renderDroppedAssetFiles();
+      form.classList.add('hidden');
+      success.classList.remove('hidden');
+      success.classList.add('flex');
+      success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } catch (err) {
+      console.error('Supabase inquiry submission error:', err);
+      if (errorBox && errorText) {
+        errorText.textContent = 'Could not save your inquiry (' + (err.message || 'network error') + '). Please try again.';
+        errorBox.classList.remove('hidden');
+        errorBox.classList.add('flex');
+      }
+    } finally {
+      window.__isSubmittingBooking = false;
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-75', 'cursor-wait');
+        submitBtn.innerHTML = originalBtnHtml;
+      }
+    }
+  }
+
+  function resetBookingForm() {
+    const form = document.getElementById('studio-booking-form');
+    const success = document.getElementById('booking-success-state');
+    const errorBox = document.getElementById('booking-error-msg');
+    const fileInput = document.getElementById('asset-file-input');
+    form.reset();
+    if (fileInput) fileInput.value = '';
+    window.__bookingSource = 'website_booking_form';
+    window.__droppedAssetFiles = [];
+    window.__isSubmittingBooking = false;
+    [
+      ['client-name', 'error-client-name'],
+      ['client-email', 'error-client-email'],
+      ['project-type', 'error-project-type'],
+      ['target-platform', 'error-target-platform'],
+      ['video-count', 'error-video-count'],
+      ['video-duration', 'error-video-duration'],
+      ['budget-tier', 'error-budget-tier'],
+      ['project-notes', 'error-project-notes'],
+      ['terms-agree', 'error-terms-agree']
+    ].forEach(([fId, eId]) => setFieldError(fId, eId, ''));
+    showAssetFileError('');
+    showAssetLinkError('', false);
+    renderDroppedAssetFiles();
+    if (errorBox) {
+      errorBox.classList.add('hidden');
+      errorBox.classList.remove('flex');
+    }
+    success.classList.add('hidden');
+    success.classList.remove('flex');
+    form.classList.remove('hidden');
+  }
+</script></main><footer class="w-full bg-surface-container-lowest shadow-[0_-1px_8px_rgba(0,0,0,0.04)]"><div class="max-w-7xl mx-auto px-6 lg:px-12 py-space-xl flex flex-col gap-space-xl"><div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-lg"><div class="flex flex-col gap-space-xs max-w-md"><a aria-label="LunaRay Studio Administrator Login" class="flex items-center gap-space-sm no-underline text-inherit w-fit" href="admin.html"><span class="font-headline-lg text-headline-lg text-primary tracking-tight">LunaRay</span><span class="px-space-xs py-0.5 rounded bg-surface-container-high text-secondary font-label-sm text-label-sm">STUDIO</span></a><p class="font-body-md text-body-md text-on-surface-variant">Making timelines look less like timelines.</p></div><div class="flex flex-wrap items-center gap-x-space-lg gap-y-space-xs"><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" data-path="home" href="#">Home</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" data-path="services" href="#">Services</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" data-path="work" href="#">Portfolio</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" data-path="pricing" href="#">Pricing</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" data-path="about" href="#">About</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" data-path="booking" href="#">Book a Slot</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" data-path="contact" href="#">Contact</a></div></div><div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md pt-space-md"><div class="flex flex-wrap items-center gap-space-lg"><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-secondary transition-colors" href="#">YouTube</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-secondary transition-colors" href="#">Instagram</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-secondary transition-colors" href="#">X / Twitter</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-secondary transition-colors" href="#">Discord</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-secondary transition-colors" href="#">Email</a></div><div class="flex flex-wrap items-center gap-space-md"><a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="terms.html">Terms &amp; Conditions</a><a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="privacy.html">Privacy Policy</a><a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="refund-policy.html">Refund Policy</a><a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="contact.html">Contact &amp; Support</a></div></div><div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm pt-space-sm"><p class="font-body-sm text-body-sm text-outline">© 2024 <a aria-label="LunaRay Studio Administrator Login" class="text-inherit no-underline" href="admin.html">LunaRay Studio</a>. All rights reserved.</p><p class="font-code-timecode text-code-timecode text-on-surface-variant">Made with creativity, caffeine, and an unreasonable number of timeline layers. ✦</p></div></div></footer>
+  <script src="supabase-client.js?v=validated"></script>
+  <script src="app.js?v=fixkeys"></script>
+</body>
+</html>

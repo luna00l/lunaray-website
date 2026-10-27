@@ -1,0 +1,385 @@
+/* ==========================================================================
+   LunaRay — Pure Cinematic Scroll Animation
+   ========================================================================== */
+
+:root {
+  --bg-dark: #07080c;
+  --bg-card: rgba(15, 17, 26, 0.72);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --accent-cyan: #06b6d4;
+  --accent-purple: #a855f7;
+  --accent-magenta: #ec4899;
+  --accent-gradient: linear-gradient(135deg, #06b6d4, #a855f7, #ec4899);
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: Consolas, Monaco, monospace;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body.is-loading {
+  overflow: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #07080c;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e2235;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-purple);
+}
+
+/* ==========================================================================
+   Preloader Overlay
+   ========================================================================== */
+.preloader {
+  position: fixed;
+  inset: 0;
+  background: #07080c;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.preloader.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.preloader-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 280px;
+}
+
+.preloader-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.brand-spark {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent-gradient);
+  box-shadow: 0 0 16px var(--accent-purple);
+}
+
+.brand-name {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: #fff;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  width: 0%;
+  height: 100%;
+  background: var(--accent-gradient);
+  border-radius: 999px;
+  transition: width 0.15s ease-out;
+}
+
+.progress-stats {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   Header Navigation
+   ========================================================================== */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 18px 28px;
+  pointer-events: none;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: auto;
+}
+
+.brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle);
+  padding: 8px 16px;
+  border-radius: 999px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.brand-badge:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.status-indicator {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}
+
+.brand-title {
+  font-weight: 700;
+  font-size: 14px;
+  color: #fff;
+  letter-spacing: -0.3px;
+}
+
+.brand-tag {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--accent-cyan);
+  background: rgba(6, 182, 212, 0.12);
+  border: 1px solid rgba(6, 182, 212, 0.25);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+/* Header Action Buttons */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-btn {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.icon-btn .icon {
+  width: 15px;
+  height: 15px;
+}
+
+.icon-btn:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.icon-btn.active {
+  background: rgba(6, 182, 212, 0.15);
+  border-color: rgba(6, 182, 212, 0.4);
+  color: var(--accent-cyan);
+}
+
+.icon-btn .audio-on-icon {
+  display: none;
+}
+.icon-btn.active .audio-off-icon {
+  display: none;
+}
+.icon-btn.active .audio-on-icon {
+  display: inline-block;
+}
+
+/* ==========================================================================
+   Sticky Viewport Stage & Canvas Engine
+   ========================================================================== */
+.sticky-stage {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #07080c;
+  z-index: 1;
+}
+
+#frameCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  /* Removed object-fit: cover which caused double bilinear filtering */
+}
+
+/* Scroll Prompt Indicator */
+.scroll-prompt {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  opacity: 0.7;
+  transition: opacity 0.4s ease;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.scroll-prompt.fade {
+  opacity: 0;
+}
+
+.mouse-icon {
+  width: 18px;
+  height: 28px;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+  position: relative;
+}
+
+.mouse-wheel {
+  width: 2px;
+  height: 5px;
+  background: var(--accent-cyan);
+  border-radius: 2px;
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: mouseScroll 1.6s infinite ease-in-out;
+}
+
+@keyframes mouseScroll {
+  0% { transform: translate(-50%, 0); opacity: 1; }
+  100% { transform: translate(-50%, 10px); opacity: 0; }
+}
+
+/* ==========================================================================
+   Scroll Spacer Track
+   ========================================================================== */
+.scroll-track {
+  height: 400vh;
+  position: relative;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   Back to Top Floating Button
+   ========================================================================== */
+html {
+  scroll-behavior: smooth;
+}
+
+#back-to-top-btn {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#back-to-top-btn.visible {
+  opacity: 0.9;
+  pointer-events: auto;
+}
+
+#back-to-top-btn:hover {
+  transform: translateY(-3px);
+}
+
+/* ==========================================================================
+   Hero Title Overlay (Fades out at 30% scroll)
+   ========================================================================== */
+.hero-text-overlay {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 90%;
+  max-width: 860px;
+  z-index: 5;
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+
+.hero-heading {
+  font-family: 'Space Grotesk', -apple-system, sans-serif;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.85), 0 2px 8px rgba(0, 0, 0, 0.95);
+}
+
+.hero-subheading {
+  font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  line-height: 1.6;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.9), 0 1px 4px rgba(0, 0, 0, 0.95);
+}
+
+
