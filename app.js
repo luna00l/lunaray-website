@@ -1,5 +1,5 @@
 /**
- * LunaRay — Pure Cinematic Scroll Animation Engine
+ * LunaRay — Cinematic Canvas Background Engine
  * 
  * Crisp 60 FPS HTML5 Canvas scroller with sub-pixel lerp smoothing,
  * DPR-aware integer pixel scaling, aspect ratio preservation,

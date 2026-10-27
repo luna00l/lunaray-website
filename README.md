@@ -6,7 +6,7 @@ Official website for **LunaRay Studio** — premier video editing service for Yo
 
 ## 🌟 Highlights & Features
 
-- **Dynamic Interactive Landing Page (`index.html`)**: Scroll-driven video frame canvas animation, before/after color grading & pacing comparisons, live editing calculator, customer testimonials, and direct booking inquiry form.
+- **Dynamic Interactive Landing Page (`index.html`)**: Cinematic video frame canvas animation, live editing calculator, customer testimonials, and direct booking inquiry form.
 - **Client Project Booking Form**: Full validation, multi-platform selection, budget range tiers, and dual upload options (direct chunked MP4 upload up to 500 MB into private Supabase Storage + Google Drive integration).
 - **Contact & Support Portal (`contact.html`)**: Dedicated support ticketing interface with topic categorization and direct client communication.
 - **Restricted Administrator Dashboard (`admin.html`)**:
