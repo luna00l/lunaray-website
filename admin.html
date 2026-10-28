@@ -120,22 +120,6 @@
         <span id="auth-error-text"></span>
       </div>
 
-      <!-- Auth Info / Magic Link Sent Banner -->
-      <div class="hidden p-3.5 rounded-2xl bg-secondary/15 border border-secondary/40 text-secondary text-xs items-start gap-2.5" id="auth-info-banner" role="status">
-        <span class="material-symbols-outlined text-[18px] shrink-0 mt-0.5">mark_email_read</span>
-        <span id="auth-info-text"></span>
-      </div>
-
-      <!-- Sign In Mode Tabs -->
-      <div class="grid grid-cols-2 gap-2 p-1 rounded-xl bg-surface-container-lowest border border-outline-variant/40">
-        <button class="py-2 px-3 rounded-lg text-xs font-semibold transition-all bg-primary text-on-primary" id="tab-password-btn" onclick="switchAuthTab('password')" type="button">
-          Email &amp; Password
-        </button>
-        <button class="py-2 px-3 rounded-lg text-xs font-medium transition-all text-on-surface-variant hover:text-on-surface" id="tab-magic-btn" onclick="switchAuthTab('magic')" type="button">
-          Email Magic Link
-        </button>
-      </div>
-
       <!-- Password Login Form -->
       <form class="flex flex-col gap-4" id="admin-password-form" onsubmit="handlePasswordSignIn(event)">
         <div class="flex flex-col gap-1.5">
@@ -152,20 +136,6 @@
           <span class="material-symbols-outlined text-[18px]">login</span>
           <span id="admin-submit-label">Sign In to Admin Dashboard</span>
         </button>
-      </form>
-
-      <!-- Optional Magic Link URL or 6-Digit Email Code Verification (Shown after requesting Magic Link) -->
-      <form class="hidden flex-col gap-3 pt-3 border-t border-outline-variant/40" id="otp-verify-group" onsubmit="handleVerifyOtpCode(event)">
-        <label class="text-[11px] font-mono uppercase tracking-wider text-secondary" for="admin-otp-input">Paste Magic Link URL (from Email) or 6-Digit Code</label>
-        <p class="text-[11px] text-on-surface-variant leading-relaxed">
-          If you opened the email on your phone while testing locally on <span class="font-mono text-on-surface">localhost:3000</span>, do <strong>not</strong> tap the link on your phone (your phone cannot reach your PC's localhost). Instead, open Gmail on this computer and click the link, or <strong>Copy the link URL</strong> from your email and paste it below:
-        </p>
-        <div class="flex gap-2">
-          <input autocomplete="one-time-code" class="flex-1 px-4 py-2 rounded-xl bg-surface-container-lowest border border-outline-variant/60 text-xs font-mono text-on-surface placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-secondary" id="admin-otp-input" placeholder="Paste https://...supabase.co/auth/v1/verify?token=... or 6-digit code" type="text"/>
-          <button class="px-4 py-2 rounded-xl bg-secondary text-on-primary font-headline font-bold text-xs hover:opacity-90 transition-all cursor-pointer shrink-0" id="otp-verify-btn" type="submit">
-            Verify &amp; Sign In
-          </button>
-        </div>
       </form>
 
       <div class="pt-3 border-t border-outline-variant/30 flex items-center justify-between text-[11px] text-outline font-mono">
@@ -430,7 +400,6 @@
     let allInquiries = [];
     let currentFilter = 'ALL';
     let currentViewMode = 'all'; // 'all' | 'projects' | 'support'
-    let currentAuthMode = 'password';
     let supabaseAuthClient = null;
     let activeAdminSession = null;
 
@@ -494,11 +463,6 @@
     function showAuthError(message) {
       const errBanner = document.getElementById('auth-error-banner');
       const errText = document.getElementById('auth-error-text');
-      const infoBanner = document.getElementById('auth-info-banner');
-      if (infoBanner) {
-        infoBanner.classList.add('hidden');
-        infoBanner.classList.remove('flex');
-      }
       if (errBanner && errText) {
         errText.textContent = message;
         errBanner.classList.remove('hidden');
@@ -506,55 +470,11 @@
       }
     }
 
-    function showAuthInfo(message) {
-      const errBanner = document.getElementById('auth-error-banner');
-      const infoBanner = document.getElementById('auth-info-banner');
-      const infoText = document.getElementById('auth-info-text');
-      if (errBanner) {
-        errBanner.classList.add('hidden');
-        errBanner.classList.remove('flex');
-      }
-      if (infoBanner && infoText) {
-        infoText.textContent = message;
-        infoBanner.classList.remove('hidden');
-        infoBanner.classList.add('flex');
-      }
-    }
-
     function clearAuthBanners() {
       const errBanner = document.getElementById('auth-error-banner');
-      const infoBanner = document.getElementById('auth-info-banner');
       if (errBanner) {
         errBanner.classList.add('hidden');
         errBanner.classList.remove('flex');
-      }
-      if (infoBanner) {
-        infoBanner.classList.add('hidden');
-        infoBanner.classList.remove('flex');
-      }
-    }
-
-    function switchAuthTab(mode) {
-      currentAuthMode = mode;
-      clearAuthBanners();
-      const pwTab = document.getElementById('tab-password-btn');
-      const magicTab = document.getElementById('tab-magic-btn');
-      const pwGroup = document.getElementById('password-field-group');
-      const pwInput = document.getElementById('admin-password-input');
-      const submitLabel = document.getElementById('admin-submit-label');
-
-      if (mode === 'magic') {
-        pwTab.className = 'py-2 px-3 rounded-lg text-xs font-medium transition-all text-on-surface-variant hover:text-on-surface';
-        magicTab.className = 'py-2 px-3 rounded-lg text-xs font-semibold transition-all bg-primary text-on-primary';
-        pwGroup.classList.add('hidden');
-        pwInput.removeAttribute('required');
-        submitLabel.textContent = 'Send Admin Magic Link';
-      } else {
-        pwTab.className = 'py-2 px-3 rounded-lg text-xs font-semibold transition-all bg-primary text-on-primary';
-        magicTab.className = 'py-2 px-3 rounded-lg text-xs font-medium transition-all text-on-surface-variant hover:text-on-surface';
-        pwGroup.classList.remove('hidden');
-        pwInput.setAttribute('required', '');
-        submitLabel.textContent = 'Sign In to Admin Dashboard';
       }
     }
 
@@ -623,42 +543,17 @@
         return;
       }
 
+      if (!password) {
+        showAuthError('Authentication Failed: Please enter your password.');
+        return;
+      }
+
+      const originalBtnHtml = submitBtn.innerHTML;
       submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span><span>Signing In...</span>';
+
       try {
         const supabase = getSupabaseAuthClient();
-
-        if (currentAuthMode === 'magic') {
-          const { error } = await supabase.auth.signInWithOtp({
-            email,
-            options: {
-              emailRedirectTo: window.location.origin + window.location.pathname
-            }
-          });
-          if (error) {
-            if (/rate limit/i.test(error.message || '')) {
-              switchAuthTab('password');
-              throw new Error(
-                'Supabase Free Tier Email Limit Reached (max 2 magic-link emails per hour across the entire project, which is why it blocks all email addresses right now). Instead of waiting 1 hour for email, use "Email & Password" below! Create your password in 15 seconds in your Supabase Dashboard → Authentication → Users → Add user → Create new user.'
-              );
-            }
-            throw error;
-          }
-          showAuthInfo(
-            'Magic Link sent to ' + email + '. IMPORTANT: Open Gmail on THIS computer to click the link (do not tap the link on your phone while testing on localhost:3000, or paste the copied link URL into the box below).'
-          );
-          const otpGroup = document.getElementById('otp-verify-group');
-          if (otpGroup) {
-            otpGroup.classList.remove('hidden');
-            otpGroup.classList.add('flex');
-          }
-          return;
-        }
-
-        if (!password) {
-          showAuthError('Authentication Failed: Please enter your password.');
-          return;
-        }
-
         const { data, error } = await supabase.auth.signInWithPassword({
           email,
           password
@@ -666,10 +561,11 @@
 
         if (error) {
           if (/invalid login credentials/i.test(error.message || '')) {
-            throw new Error('Authentication Failed: Invalid email or password. If this is your first time signing in as ' + email + ', click the "Email Magic Link" tab above to sign in via email, then click "Set Password" inside the dashboard.');
+            throw new Error('Authentication Failed: Invalid email or password. Please verify your credentials.');
           }
           throw error;
         }
+
         if (data?.session) {
           await verifyAndLoadAdminDashboard(data.session);
         }
@@ -677,70 +573,7 @@
         showAuthError(err?.message || 'Authentication Failed: Could not verify your credentials.');
       } finally {
         submitBtn.disabled = false;
-      }
-    }
-
-    async function handleVerifyOtpCode(event) {
-      event.preventDefault();
-      clearAuthBanners();
-      const email = (document.getElementById('admin-email-input')?.value || '').trim().toLowerCase();
-      const rawInput = (document.getElementById('admin-otp-input')?.value || '').trim();
-      const btn = document.getElementById('otp-verify-btn');
-      if (!rawInput) {
-        showAuthError('Authentication Failed: Please paste the Magic Link URL from your email or enter the 6-digit verification code.');
-        return;
-      }
-      if (btn) btn.disabled = true;
-      try {
-        const supabase = getSupabaseAuthClient();
-
-        // Case 1: User pasted the full Supabase Magic Link URL (e.g. https://...supabase.co/auth/v1/verify?token=...&type=magiclink)
-        if (/^https?:\/\//i.test(rawInput) || rawInput.includes('token=')) {
-          let tokenHash = '';
-          let verifyType = 'magiclink';
-          try {
-            const parsedUrl = new URL(rawInput);
-            tokenHash = parsedUrl.searchParams.get('token') || parsedUrl.searchParams.get('token_hash') || '';
-            verifyType = parsedUrl.searchParams.get('type') || 'magiclink';
-          } catch (_) {
-            const mToken = rawInput.match(/[?&]token=([^&]+)/);
-            const mType = rawInput.match(/[?&]type=([^&]+)/);
-            if (mToken) tokenHash = decodeURIComponent(mToken[1]);
-            if (mType) verifyType = decodeURIComponent(mType[1]);
-          }
-
-          if (!tokenHash) {
-            throw new Error('Authentication Failed: The pasted link does not contain a valid verification token.');
-          }
-
-          const { data, error } = await supabase.auth.verifyOtp({
-            token_hash: tokenHash,
-            type: verifyType
-          });
-          if (error) throw error;
-          if (data?.session) {
-            await verifyAndLoadAdminDashboard(data.session);
-            return;
-          }
-        }
-
-        // Case 2: User entered a 6-digit OTP code
-        if (!email) {
-          throw new Error('Authentication Failed: Please enter your administrator email address above.');
-        }
-        const { data, error } = await supabase.auth.verifyOtp({
-          email,
-          token: rawInput,
-          type: 'email'
-        });
-        if (error) throw error;
-        if (data?.session) {
-          await verifyAndLoadAdminDashboard(data.session);
-        }
-      } catch (err) {
-        showAuthError('Authentication Failed: ' + (err?.message || 'Invalid or expired Magic Link / verification code. Note that clicking a link on your phone uses it up immediately.'));
-      } finally {
-        if (btn) btn.disabled = false;
+        submitBtn.innerHTML = originalBtnHtml;
       }
     }
 
@@ -811,47 +644,87 @@
       }
       if (refreshIcon) refreshIcon.classList.add('animate-spin');
 
+      // Make sure dashboard shell is displayed and loading skeleton is visible
+      setAuthenticatedUiState(true, session.user?.email || 'Admin');
+      if (loadingEl) {
+        loadingEl.classList.remove('hidden');
+        loadingEl.classList.add('flex');
+      }
+      if (containerEl) {
+        containerEl.classList.add('hidden');
+        containerEl.classList.remove('flex');
+      }
+
       try {
-        const cfg = window.LUNARAY_SUPABASE_CONFIG;
-        const res = await fetch(`${cfg.edgeFunctionUrl}?action=list-inquiries`, {
-          method: 'GET',
-          headers: {
-            'apikey': cfg.anonKey,
-            'Authorization': `Bearer ${session.access_token}`
+        let inquiries = null;
+        let adminEmail = session.user?.email || 'Admin';
+
+        // Attempt 1: Fetch via Edge Function with an 8-second timeout
+        try {
+          const cfg = window.LUNARAY_SUPABASE_CONFIG;
+          const controller = new AbortController();
+          const timer = setTimeout(() => controller.abort(), 8000);
+
+          const res = await fetch(`${cfg.edgeFunctionUrl}?action=list-inquiries`, {
+            method: 'GET',
+            headers: {
+              'apikey': cfg.anonKey,
+              'Authorization': `Bearer ${session.access_token}`
+            },
+            signal: controller.signal
+          });
+          clearTimeout(timer);
+
+          if (res.status === 401 || res.status === 403) {
+            const payload = await res.json().catch(() => ({}));
+            const supabase = getSupabaseAuthClient();
+            await supabase.auth.signOut();
+            setAuthenticatedUiState(false);
+            showAuthError(
+              res.status === 403
+                ? `Administrator Authorization Denied (403): You authenticated as "${session.user?.email || 'this account'}", which is not an authorized administrator.`
+                : `Authentication Failed (401): ${payload.error || 'Your login session is invalid or expired. Please sign in again.'}`
+            );
+            return;
           }
-        });
 
-        const payload = await res.json().catch(() => ({}));
+          if (res.ok) {
+            const payload = await res.json().catch(() => ({}));
+            inquiries = payload.inquiries;
+            if (payload.admin_email) adminEmail = payload.admin_email;
+          }
+        } catch (edgeErr) {
+          console.warn('Edge function unavailable or timed out, querying database directly:', edgeErr);
+        }
 
-        if (res.status === 401) {
+        // Attempt 2: Direct query via Supabase Client (protected by Postgres RLS is_admin())
+        if (!inquiries) {
           const supabase = getSupabaseAuthClient();
-          await supabase.auth.signOut();
-          setAuthenticatedUiState(false);
-          showAuthError('Authentication Failed (401): ' + (payload.error || 'Your login session is invalid or expired. Please sign in again.'));
-          return;
+          const { data: dbRows, error: dbErr } = await supabase
+            .from('project_inquiries_by_date')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .order('id', { ascending: false });
+
+          if (dbErr) {
+            if (dbErr.code === '42501' || /permission denied|security policy/i.test(dbErr.message || '')) {
+              await supabase.auth.signOut();
+              setAuthenticatedUiState(false);
+              showAuthError(`Administrator Authorization Denied: Account "${session.user?.email || 'this account'}" is not an authorized administrator.`);
+              return;
+            }
+            throw dbErr;
+          }
+          inquiries = dbRows;
         }
 
-        if (res.status === 403) {
-          // Signed in with a valid email, but that email is NOT in public.admin_users
-          const signedInEmail = session.user?.email || 'this account';
-          const supabase = getSupabaseAuthClient();
-          await supabase.auth.signOut();
-          setAuthenticatedUiState(false);
-          showAuthError(
-            'Administrator Authorization Denied (403): You authenticated as "' + signedInEmail + '", which is NOT an authorized administrator. Please sign in with an authorized administrator email.'
-          );
-          return;
+        allInquiries = sortSubmissionsNewestFirst(inquiries || []);
+        setAuthenticatedUiState(true, adminEmail);
+
+        if (loadingEl) {
+          loadingEl.classList.add('hidden');
+          loadingEl.classList.remove('flex');
         }
-
-        if (!res.ok) {
-          throw new Error(payload.error || `HTTP ${res.status}`);
-        }
-
-        // Server verified admin token and returned protected submissions
-        setAuthenticatedUiState(true, payload.admin_email || session.user?.email);
-        allInquiries = sortSubmissionsNewestFirst(payload.inquiries || []);
-
-        if (loadingEl) loadingEl.classList.add('hidden');
         if (containerEl) {
           containerEl.classList.remove('hidden');
           containerEl.classList.add('flex');
@@ -859,9 +732,12 @@
         renderDashboard();
       } catch (err) {
         console.error('Failed to verify/load admin submissions:', err);
-        if (loadingEl) loadingEl.classList.add('hidden');
+        if (loadingEl) {
+          loadingEl.classList.add('hidden');
+          loadingEl.classList.remove('flex');
+        }
         if (errorBox && errorText) {
-          errorText.textContent = 'Could not load project submissions (' + (err.message || 'network error') + ').';
+          errorText.textContent = 'Could not load project submissions (' + (err.message || 'network error') + '). Click Refresh Submissions to retry.';
           errorBox.classList.remove('hidden');
           errorBox.classList.add('flex');
         }
@@ -1645,25 +1521,6 @@
 
       container.innerHTML = htmlBlocks.join('');
     }
-            <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-outline-variant/50">
-              <div class="flex items-center gap-3">
-                <span class="w-2.5 h-2.5 rounded-full ${meta.dotClass}"></span>
-                <h3 class="font-headline font-bold text-lg tracking-wide uppercase text-on-surface">${escapeHtml(sectionName)}</h3>
-                <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold border ${meta.badgeClass}">
-                  ${items.length} ${items.length === 1 ? 'submission' : 'submissions'}
-                </span>
-              </div>
-              <span class="text-xs text-outline">${escapeHtml(meta.subtitle)}</span>
-            </div>
-            <div class="flex flex-col gap-4">
-              ${cardsHtml}
-            </div>
-          </section>
-        `);
-      });
-
-      container.innerHTML = htmlBlocks.join('');
-    }
 
     function updateLiveClock() {
       const el = document.getElementById('live-ist-clock');
@@ -1683,15 +1540,9 @@
         const errorType = hashParams.get('error') || searchParams.get('error') || '';
 
         if (errorCode || errorDesc || errorType) {
-          if (errorCode === 'otp_expired' || /expired|invalid/i.test(errorDesc)) {
-            showAuthError(
-              'Authentication Failed (' + (errorCode || 'link_expired') + '): This Magic Link has expired or was already clicked once (for example, on your phone). Magic Links are single-use. Please request a new Magic Link below and open it on this computer.'
-            );
-          } else {
-            showAuthError(
-              'Authentication Failed: ' + (errorDesc || errorCode || errorType)
-            );
-          }
+          showAuthError(
+            'Authentication Failed: ' + (errorDesc || errorCode || errorType)
+          );
           // Clean error hash from URL bar without reloading
           if (window.history && window.history.replaceState) {
             window.history.replaceState(null, document.title, window.location.pathname);
