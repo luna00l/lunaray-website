@@ -450,6 +450,139 @@
       </a>
 </div>
 </section>
+<!-- ==================== BEFORE & AFTER SLIDER ==================== -->
+<section class="w-full px-5 sm:px-8 lg:px-12 py-14 lg:py-20 max-w-7xl mx-auto flex flex-col gap-7 sm:gap-8" id="before-after">
+  <!-- Section Header -->
+  <div class="flex flex-col items-center text-center gap-2.5 max-w-2xl mx-auto">
+    <span class="font-code-timecode text-xs sm:text-[13px] font-semibold text-secondary uppercase tracking-[0.16em]">TIMELINE COMPARISON</span>
+    <h2 class="font-headline-lg text-2xl sm:text-3xl lg:text-[36px] font-bold tracking-tight text-on-surface leading-tight">THE GLOW-UP IS REAL.</h2>
+    <p class="font-body-md text-sm sm:text-[15px] text-on-surface/85 leading-relaxed max-w-xl">
+      Drag the playhead divider below to witness the real-time difference between flat source files and calibrated master delivery.
+    </p>
+  </div>
+
+  <!-- Comparison Mode Tabs -->
+  <div class="flex justify-center w-full">
+    <div class="inline-grid grid-cols-1 sm:grid-cols-2 p-1.5 rounded-2xl bg-[#171720] border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.45)] w-full max-w-md sm:max-w-fit gap-1" role="tablist" aria-label="Comparison mode">
+      <button
+        class="px-5 py-2.5 rounded-xl bg-primary text-on-primary font-body-md text-[13px] sm:text-sm font-semibold tracking-wide shadow-[0_2px_12px_rgba(202,190,255,0.35)] transition-all text-center"
+        id="slider-tab-color"
+        onclick="switchSliderMode('color')"
+        type="button"
+      >
+        Log vs. Color Grade &amp; Grain
+      </button>
+      <button
+        class="px-5 py-2.5 rounded-xl text-on-surface/80 hover:text-on-surface hover:bg-white/[0.04] font-body-md text-[13px] sm:text-sm font-medium tracking-wide transition-all text-center"
+        id="slider-tab-subtitles"
+        onclick="switchSliderMode('subtitles')"
+        type="button"
+      >
+        Raw Cut vs. Kinetic Motion
+      </button>
+    </div>
+  </div>
+
+  <!-- Interactive 16:9 Comparison Stage -->
+  <div class="relative w-full max-w-5xl mx-auto aspect-video rounded-2xl overflow-hidden select-none bg-[#0d0d15] border border-white/[0.12] shadow-[0_24px_60px_-15px_rgba(0,0,0,0.85),0_0_40px_rgba(169,155,239,0.08)] group">
+    <!-- After Image (Full 16:9 Base Layer) -->
+    <div class="absolute inset-0 w-full h-full">
+      <img
+        alt="Finished 4K cinematic video frame in vivid deep contrast, glowing lavender neon hues, film grain, and crisp saturation."
+        class="w-full h-full object-cover block"
+        data-alt="Finished 4K cinematic video frame in vivid deep contrast, glowing lavender neon hues, film grain, and crisp saturation."
+        decoding="async"
+        draggable="false"
+        id="slider-after-img"
+        src="videos/compare-grade-after.jpg"
+      />
+    </div>
+
+    <!-- Before Image (Full 16:9 Layer Clipped via clip-path to prevent any stretching) -->
+    <div
+      class="absolute inset-0 w-full h-full overflow-hidden will-change-[clip-path]"
+      id="slider-clipped-layer"
+      style="clip-path: inset(0 50% 0 0); -webkit-clip-path: inset(0 50% 0 0);"
+    >
+      <img
+        alt="Unedited flat desaturated logarithmic raw camera footage with washed out shadows and no color correction."
+        class="w-full h-full object-cover block"
+        data-alt="Unedited flat desaturated logarithmic raw camera footage with washed out shadows and no color correction."
+        decoding="async"
+        draggable="false"
+        id="slider-before-img"
+        src="videos/compare-log-before.jpg"
+      />
+    </div>
+
+    <!-- Top Corner Status Badges (Non-clipped overlay for crisp readability) -->
+    <div class="absolute top-2.5 left-2.5 sm:top-4 sm:left-4 z-10 pointer-events-none px-2.5 py-1 sm:px-3.5 sm:py-2 rounded-lg sm:rounded-xl bg-[#0d0d15]/90 backdrop-blur-md border border-white/15 text-secondary font-code-timecode text-[10px] sm:text-xs font-semibold tracking-wide sm:tracking-wider flex items-center gap-1.5 sm:gap-2 shadow-lg transition-opacity duration-150" id="slider-before-badge">
+      <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-secondary shadow-[0_0_8px_rgba(238,183,206,0.8)] shrink-0"></span>
+      <span id="slider-before-label">RAW LOG FOOTAGE</span>
+    </div>
+
+    <div class="absolute top-2.5 right-2.5 sm:top-4 sm:right-4 z-10 pointer-events-none px-2.5 py-1 sm:px-3.5 sm:py-2 rounded-lg sm:rounded-xl bg-[#0d0d15]/90 backdrop-blur-md border border-white/15 text-primary font-code-timecode text-[10px] sm:text-xs font-semibold tracking-wide sm:tracking-wider flex items-center gap-1.5 sm:gap-2 shadow-lg transition-opacity duration-150" id="slider-after-badge">
+      <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(202,190,255,0.8)] shrink-0"></span>
+      <span id="slider-after-label">GRADED &amp; POLISHED 4K MASTER</span>
+    </div>
+
+    <!-- Draggable Playhead Split Bar -->
+    <div
+      class="absolute top-0 bottom-0 w-[2px] -translate-x-1/2 bg-primary pointer-events-none z-10 flex items-center justify-center shadow-[0_0_20px_rgba(202,190,255,0.95)]"
+      id="slider-handle"
+      style="left: 50%;"
+    >
+      <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-primary text-on-primary border-2 border-[#0d0d15] flex items-center justify-center shadow-[0_4px_20px_rgba(0,0,0,0.65),0_0_20px_rgba(202,190,255,0.6)] group-hover:scale-105 group-active:scale-95 transition-transform">
+        <span class="material-symbols-outlined text-[20px] rotate-90 select-none">unfold_more</span>
+      </div>
+    </div>
+
+    <!-- Range Input for Touch/Mouse/Keyboard Interaction -->
+    <input
+      aria-label="Compare raw vs polished edit"
+      class="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-20 m-0"
+      id="slider-range-input"
+      max="100"
+      min="0"
+      step="0.5"
+      type="range"
+      value="50"
+    />
+  </div>
+
+  <!-- Comparative Value Breakdown (Aligned to same max-w-5xl grid) -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 max-w-5xl mx-auto w-full">
+    <div class="p-5 sm:p-6 rounded-2xl bg-[#181822] border border-white/[0.08] hover:border-primary/30 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)] flex flex-col gap-2 transition-all">
+      <div class="flex items-center gap-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0"></span>
+        <span class="font-code-timecode text-xs sm:text-[13px] font-semibold text-primary uppercase tracking-wider">01 / Dynamic Color</span>
+      </div>
+      <p class="font-body-md text-[13.5px] sm:text-sm text-on-surface/85 leading-relaxed">
+        Log sensor curve transformed into deep shadow contrast with calibrated highlight roll-off and natural skin tones.
+      </p>
+    </div>
+
+    <div class="p-5 sm:p-6 rounded-2xl bg-[#181822] border border-white/[0.08] hover:border-secondary/30 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)] flex flex-col gap-2 transition-all">
+      <div class="flex items-center gap-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-secondary shrink-0"></span>
+        <span class="font-code-timecode text-xs sm:text-[13px] font-semibold text-secondary uppercase tracking-wider">02 / Auditory Space</span>
+      </div>
+      <p class="font-body-md text-[13.5px] sm:text-sm text-on-surface/85 leading-relaxed">
+        Flat camera mic replaced with spatial stereo sound FX, impact risers, and studio-grade vocal EQ.
+      </p>
+    </div>
+
+    <div class="p-5 sm:p-6 rounded-2xl bg-[#181822] border border-white/[0.08] hover:border-tertiary/30 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)] flex flex-col gap-2 transition-all">
+      <div class="flex items-center gap-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-tertiary shrink-0"></span>
+        <span class="font-code-timecode text-xs sm:text-[13px] font-semibold text-tertiary uppercase tracking-wider">03 / Attention Velocity</span>
+      </div>
+      <p class="font-body-md text-[13.5px] sm:text-sm text-on-surface/85 leading-relaxed">
+        Dead space trimmed down to milliseconds, keeping viewer eyes locked to the center frame from hook to outro.
+      </p>
+    </div>
+  </div>
+</section>
 <!-- ==================== THE WORKFLOW SECTION ==================== -->
 <section class="w-full px-6 lg:px-12 py-16 lg:py-24 max-w-7xl mx-auto flex flex-col gap-12" id="workflow">
 <div class="flex flex-col items-center text-center gap-2 max-w-xl mx-auto">
@@ -1069,6 +1202,77 @@ Reminder: Submitting a link does not automatically grant access to its contents.
       });
     });
   });
+
+  // 2. Interactive Before/After Split Slider
+  const rangeInput = document.getElementById('slider-range-input');
+  const clippedLayer = document.getElementById('slider-clipped-layer');
+  const sliderHandle = document.getElementById('slider-handle');
+  const beforeBadge = document.getElementById('slider-before-badge');
+  const afterBadge = document.getElementById('slider-after-badge');
+
+  function updateSliderPosition(val) {
+    const pct = Math.max(0, Math.min(100, parseFloat(val)));
+    const rightInset = 100 - pct;
+    if (clippedLayer) {
+      clippedLayer.style.clipPath = `inset(0 ${rightInset}% 0 0)`;
+      clippedLayer.style.webkitClipPath = `inset(0 ${rightInset}% 0 0)`;
+    }
+    if (sliderHandle) {
+      sliderHandle.style.left = `${pct}%`;
+    }
+    if (beforeBadge) {
+      beforeBadge.style.opacity = pct < 18 ? '0' : '1';
+    }
+    if (afterBadge) {
+      afterBadge.style.opacity = pct > 82 ? '0' : '1';
+    }
+  }
+
+  if (rangeInput) {
+    rangeInput.addEventListener('input', (e) => {
+      updateSliderPosition(e.target.value);
+    });
+  }
+
+  function switchSliderMode(mode) {
+    const tabColor = document.getElementById('slider-tab-color');
+    const tabSubtitles = document.getElementById('slider-tab-subtitles');
+    const beforeImg = document.getElementById('slider-before-img');
+    const afterImg = document.getElementById('slider-after-img');
+    const beforeLabel = document.getElementById('slider-before-label');
+    const afterLabel = document.getElementById('slider-after-label');
+
+    const activeClass = "px-5 py-2.5 rounded-xl bg-primary text-on-primary font-body-md text-[13px] sm:text-sm font-semibold tracking-wide shadow-[0_2px_12px_rgba(202,190,255,0.35)] transition-all text-center";
+    const inactiveClass = "px-5 py-2.5 rounded-xl text-on-surface/80 hover:text-on-surface hover:bg-white/[0.04] font-body-md text-[13px] sm:text-sm font-medium tracking-wide transition-all text-center";
+
+    if (mode === 'color') {
+      if (tabColor) tabColor.className = activeClass;
+      if (tabSubtitles) tabSubtitles.className = inactiveClass;
+      if (beforeImg) {
+        beforeImg.src = "videos/compare-log-before.jpg";
+        beforeImg.setAttribute('data-alt', "Unedited flat desaturated logarithmic raw camera footage with washed out shadows and no color correction.");
+      }
+      if (afterImg) {
+        afterImg.src = "videos/compare-grade-after.jpg";
+        afterImg.setAttribute('data-alt', "Finished 4K cinematic video frame in vivid deep contrast, glowing lavender neon hues, film grain, and crisp saturation.");
+      }
+      if (beforeLabel) beforeLabel.textContent = "RAW LOG FOOTAGE";
+      if (afterLabel) afterLabel.textContent = "GRADED & POLISHED 4K MASTER";
+    } else {
+      if (tabSubtitles) tabSubtitles.className = activeClass;
+      if (tabColor) tabColor.className = inactiveClass;
+      if (beforeImg) {
+        beforeImg.src = "videos/compare-rawcut-before.jpg";
+        beforeImg.setAttribute('data-alt', "Static rough cut timeline frame without motion graphics, subtitles, or dynamic zooms.");
+      }
+      if (afterImg) {
+        afterImg.src = "videos/compare-kinetic-after.jpg";
+        afterImg.setAttribute('data-alt', "Polished timeline frame with kinetic animated subtitle typography, motion trails, sound wave accents, and zoom focus.");
+      }
+      if (beforeLabel) beforeLabel.textContent = "UNEDITED RAW CUT";
+      if (afterLabel) afterLabel.textContent = "KINETIC MOTION MASTER";
+    }
+  }
 
   // 3. FAQ Accordion Toggle
   function toggleFaq(btn) {
