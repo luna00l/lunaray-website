@@ -255,6 +255,7 @@ body.is-loading {
   inset: 0;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   background-color: #07080c;
   z-index: 1;
@@ -323,9 +324,21 @@ body.is-loading {
    Scroll Spacer Track
    ========================================================================== */
 .scroll-track {
-  height: 400vh;
+  height: 270vh;
   position: relative;
   pointer-events: none;
+}
+
+@media (max-width: 1024px) {
+  .scroll-track {
+    height: 230vh;
+  }
+}
+
+@media (max-width: 768px) {
+  .scroll-track {
+    height: 185vh;
+  }
 }
 
 /* ==========================================================================
@@ -380,6 +393,103 @@ html {
   font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
   line-height: 1.6;
   text-shadow: 0 2px 16px rgba(0, 0, 0, 0.9), 0 1px 4px rgba(0, 0, 0, 0.95);
+}
+
+/* Explore the Studio Navigation CTA Button */
+.explore-studio-btn {
+  pointer-events: auto;
+  cursor: pointer;
+  margin-top: 28px;
+  padding: 14px 30px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: 'Space Grotesk', var(--font-sans);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #1c065b;
+  background: linear-gradient(135deg, #e6deff 0%, #cabeff 55%, #a99bef 100%);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.65),
+    0 0 24px rgba(202, 190, 255, 0.45),
+    0 0 0 4px rgba(202, 190, 255, 0.14);
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.25s ease,
+              background 0.25s ease;
+  animation: exploreBtnPulse 3s infinite ease-in-out;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.explore-studio-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  background: linear-gradient(135deg, #f2edff 0%, #d8ceff 55%, #b8abff 100%);
+  box-shadow:
+    0 14px 36px rgba(0, 0, 0, 0.75),
+    0 0 32px rgba(202, 190, 255, 0.7),
+    0 0 0 6px rgba(202, 190, 255, 0.22);
+}
+
+.explore-studio-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.explore-studio-btn:focus-visible {
+  outline: 2px solid #cabeff;
+  outline-offset: 4px;
+}
+
+.explore-btn-arrow {
+  display: inline-block;
+  font-size: 15px;
+  line-height: 1;
+  animation: exploreArrowBounce 1.8s infinite ease-in-out;
+}
+
+@keyframes exploreBtnPulse {
+  0%, 100% {
+    box-shadow:
+      0 10px 30px rgba(0, 0, 0, 0.65),
+      0 0 22px rgba(202, 190, 255, 0.42),
+      0 0 0 4px rgba(202, 190, 255, 0.12);
+  }
+  50% {
+    box-shadow:
+      0 12px 34px rgba(0, 0, 0, 0.7),
+      0 0 32px rgba(202, 190, 255, 0.65),
+      0 0 0 6px rgba(202, 190, 255, 0.22);
+  }
+}
+
+@keyframes exploreArrowBounce {
+  0%, 100% {
+    transform: translateY(-1px);
+  }
+  50% {
+    transform: translateY(3px);
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-text-overlay {
+    top: 46%;
+    width: 92%;
+  }
+
+  .explore-studio-btn {
+    margin-top: 22px;
+    padding: 13px 26px;
+    font-size: 12.5px;
+    letter-spacing: 0.08em;
+  }
+
+  .scroll-prompt {
+    bottom: 22px;
+  }
 }
 
 

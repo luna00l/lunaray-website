@@ -11,7 +11,9 @@
 
   // --- Configuration ---
   const TOTAL_FRAMES = 180;
-  const LERP_FACTOR = 0.15;
+  const LERP_FACTOR = 0.24;
+  const LERP_FACTOR_MOBILE = 0.34;
+  const LERP_FACTOR_AUTOSCROLL = 0.45;
   const NATIVE_WIDTH = 2560;
   const NATIVE_HEIGHT = 1440;
   const NATIVE_ASPECT = NATIVE_WIDTH / NATIVE_HEIGHT; // 16:9
@@ -25,6 +27,8 @@
     isLoaded: false,
     fitMode: 'cover', // 'cover' or 'contain'
     isPlaying: false,
+    isAutoScrolling: false,
+    autoScrollRafId: null,
     playSpeed: 1.0,
     isAudioOn: false,
     lastPlayTimestamp: null
@@ -40,8 +44,10 @@
     canvas: document.getElementById('frameCanvas'),
     ctx: document.getElementById('frameCanvas').getContext('2d'),
     heroTextOverlay: document.getElementById('heroTextOverlay'),
+    exploreStudioBtn: document.getElementById('exploreStudioBtn'),
     scrollTrack: document.getElementById('scrollTrack'),
     scrollPrompt: document.getElementById('scrollPrompt'),
+    mainContent: document.getElementById('main-content'),
     fitToggle: document.getElementById('fitToggle'),
     fitLabel: document.getElementById('fitLabel'),
     audioToggle: document.getElementById('audioToggle'),
@@ -198,10 +204,17 @@
   // =========================================================================
   // 3. Scroll Tracking & Lerp Physics
   // =========================================================================
+  function getAnimationScrollDistance() {
+    const trackHeight = DOM.scrollTrack ? DOM.scrollTrack.offsetHeight : 0;
+    if (trackHeight <= 0) return 0;
+    const vh = viewportHeight || window.innerHeight || 0;
+    return Math.max(1, trackHeight - vh * 0.65);
+  }
+
   function getScrollProgress() {
-    const maxScroll = DOM.scrollTrack ? DOM.scrollTrack.offsetHeight : 0;
-    if (maxScroll <= 0) return 0;
-    return Math.min(Math.max(window.scrollY / maxScroll, 0), 1);
+    const animMaxScroll = getAnimationScrollDistance();
+    if (animMaxScroll <= 0) return 0;
+    return Math.min(Math.max(window.scrollY / animMaxScroll, 0), 1);
   }
 
   function onScroll() {
@@ -230,8 +243,83 @@
   }
 
   function scrollToProgress(ratio) {
-    const maxScroll = DOM.scrollTrack ? DOM.scrollTrack.offsetHeight : 0;
-    window.scrollTo({ top: ratio * maxScroll, behavior: 'smooth' });
+    stopAutoScroll();
+    const animMaxScroll = getAnimationScrollDistance();
+    window.scrollTo({ top: ratio * animMaxScroll, behavior: 'smooth' });
+  }
+
+  // Smooth C1-continuous easing curve: quick ramp-in, steady frame playback cruise, soft dock into next section
+  function cinematicScrollEase(t) {
+    const t1 = 0.12;
+    const t2 = 0.72;
+    const vMax = 2 / (1 + t2 - t1);
+    if (t <= t1) {
+      return 0.5 * vMax * (t * t) / t1;
+    }
+    if (t < t2) {
+      return vMax * (0.5 * t1 + (t - t1));
+    }
+    const rem = 1 - t;
+    return 1 - 0.5 * vMax * (rem * rem) / (1 - t2);
+  }
+
+  function stopAutoScroll() {
+    if (state.autoScrollRafId !== null) {
+      cancelAnimationFrame(state.autoScrollRafId);
+      state.autoScrollRafId = null;
+    }
+    if (state.isAutoScrolling) {
+      state.isAutoScrolling = false;
+      document.documentElement.style.scrollBehavior = '';
+    }
+  }
+
+  function exploreStudio() {
+    state.isPlaying = false;
+    stopAutoScroll();
+
+    const targetY = DOM.mainContent
+      ? DOM.mainContent.offsetTop
+      : (DOM.scrollTrack ? DOM.scrollTrack.offsetHeight : window.innerHeight * 2);
+    const startY = window.scrollY;
+    const distance = targetY - startY;
+
+    if (distance <= 2) {
+      window.scrollTo({ top: targetY, behavior: 'smooth' });
+      return;
+    }
+
+    const isMobile = window.innerWidth <= 768;
+    const baseDuration = isMobile ? 1500 : 1800;
+    const remainingRatio = targetY > 0 ? Math.min(1, Math.max(0.35, distance / targetY)) : 1;
+    const duration = Math.round(baseDuration * remainingRatio);
+
+    state.isAutoScrolling = true;
+    document.documentElement.style.scrollBehavior = 'auto';
+    if (DOM.scrollPrompt) DOM.scrollPrompt.classList.add('fade');
+
+    let startTime = null;
+
+    function stepAutoScroll(now) {
+      if (!state.isAutoScrolling) return;
+      if (startTime === null) startTime = now;
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = cinematicScrollEase(progress);
+      const nextY = startY + distance * eased;
+
+      window.scrollTo(0, nextY);
+      state.targetFrame = getScrollProgress() * (TOTAL_FRAMES - 1);
+
+      if (progress < 1) {
+        state.autoScrollRafId = requestAnimationFrame(stepAutoScroll);
+      } else {
+        window.scrollTo(0, targetY);
+        stopAutoScroll();
+      }
+    }
+
+    state.autoScrollRafId = requestAnimationFrame(stepAutoScroll);
   }
 
   // 60 FPS animation loop with lerp physics
@@ -250,16 +338,19 @@
       }
 
       const progress = state.targetFrame / (TOTAL_FRAMES - 1);
-      const maxScroll = DOM.scrollTrack ? DOM.scrollTrack.offsetHeight : 0;
-      window.scrollTo(0, progress * maxScroll);
+      const animMaxScroll = getAnimationScrollDistance();
+      window.scrollTo(0, progress * animMaxScroll);
     } else {
       state.lastPlayTimestamp = null;
     }
 
-    // Lerp smoothing
+    // Lerp smoothing (more responsive on mobile and during button-triggered scroll)
+    const activeLerp = state.isAutoScrolling
+      ? LERP_FACTOR_AUTOSCROLL
+      : (viewportWidth <= 768 ? LERP_FACTOR_MOBILE : LERP_FACTOR);
     const diff = state.targetFrame - state.currentFrame;
     if (Math.abs(diff) > 0.001) {
-      state.currentFrame += diff * LERP_FACTOR;
+      state.currentFrame += diff * activeLerp;
     } else {
       state.currentFrame = state.targetFrame;
     }
@@ -285,25 +376,33 @@
       DOM.heroTextOverlay.style.opacity = opacity.toFixed(3);
       DOM.heroTextOverlay.style.transform = `translate(-50%, calc(-50% + ${translateY.toFixed(1)}px))`;
       DOM.heroTextOverlay.style.visibility = opacity <= 0.005 ? 'hidden' : 'visible';
+      if (DOM.exploreStudioBtn) {
+        DOM.exploreStudioBtn.style.pointerEvents = opacity <= 0.1 ? 'none' : 'auto';
+      }
     } else {
       DOM.heroTextOverlay.style.opacity = '0';
       DOM.heroTextOverlay.style.transform = 'translate(-50%, calc(-50% - 35px))';
       DOM.heroTextOverlay.style.visibility = 'hidden';
+      if (DOM.exploreStudioBtn) {
+        DOM.exploreStudioBtn.style.pointerEvents = 'none';
+      }
     }
   }
 
   function togglePlayback() {
+    stopAutoScroll();
     state.isPlaying = !state.isPlaying;
     if (DOM.scrollPrompt) DOM.scrollPrompt.classList.add('fade');
   }
 
   function stepFrame(step) {
+    stopAutoScroll();
     state.isPlaying = false;
     state.targetFrame = Math.max(0, Math.min(TOTAL_FRAMES - 1, state.targetFrame + step));
     state.currentFrame = state.targetFrame;
     const progress = state.targetFrame / (TOTAL_FRAMES - 1);
-    const maxScroll = DOM.scrollTrack ? DOM.scrollTrack.offsetHeight : 0;
-    window.scrollTo({ top: progress * maxScroll, behavior: 'auto' });
+    const animMaxScroll = getAnimationScrollDistance();
+    window.scrollTo({ top: progress * animMaxScroll, behavior: 'auto' });
   }
 
   // =========================================================================
@@ -420,6 +519,25 @@
   function bindEvents() {
     window.addEventListener('resize', handleResize);
     window.addEventListener('scroll', onScroll, { passive: true });
+
+    // Explore the Studio CTA Button
+    if (DOM.exploreStudioBtn) {
+      DOM.exploreStudioBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        exploreStudio();
+      });
+    }
+
+    // Allow manual user scroll interaction to seamlessly take over during auto-scroll
+    window.addEventListener('wheel', () => {
+      if (state.isAutoScrolling) stopAutoScroll();
+    }, { passive: true });
+
+    window.addEventListener('touchstart', (e) => {
+      if (state.isAutoScrolling && (!DOM.exploreStudioBtn || !DOM.exploreStudioBtn.contains(e.target))) {
+        stopAutoScroll();
+      }
+    }, { passive: true });
 
     // Fit Toggle (Cover vs Contain)
     if (DOM.fitToggle) {
