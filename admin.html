@@ -402,6 +402,94 @@
     let currentViewMode = 'all'; // 'all' | 'projects' | 'support'
     let supabaseAuthClient = null;
     let activeAdminSession = null;
+    let activeDashboardLoadPromise = null;
+
+    function isNetworkFetchError(err) {
+      const msg = String(err?.message || err || '');
+      return (
+        err?.name === 'TypeError' ||
+        err?.name === 'AbortError' ||
+        /networkerror|failed to fetch|load failed|timed out|network request failed|fetch/i.test(msg)
+      );
+    }
+
+    function formatAdminNetworkError(err, fallbackMsg) {
+      if (isNetworkFetchError(err)) {
+        return 'Network Error: Could not connect to the Supabase backend server. Please check your internet connection and try again.';
+      }
+      return err?.message || fallbackMsg || 'An unexpected error occurred.';
+    }
+
+    function withTimeout(promise, ms, timeoutMessage) {
+      let timer = null;
+      const timeoutPromise = new Promise((_, reject) => {
+        timer = setTimeout(() => {
+          reject(new Error(timeoutMessage || 'Request timed out.'));
+        }, ms);
+      });
+      return Promise.race([promise, timeoutPromise]).finally(() => {
+        if (timer) clearTimeout(timer);
+      });
+    }
+
+    async function adminFetchWithTimeout(url, options = {}, timeoutMs = 10000) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        return await fetch(url, { ...options, signal: controller.signal });
+      } catch (err) {
+        if (err && err.name === 'AbortError') {
+          throw new Error('Request to Supabase timed out. Please retry.');
+        }
+        throw err;
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    async function getSafeAdminSession(timeoutMs = 5000) {
+      try {
+        const supabase = getSupabaseAuthClient();
+        const result = await withTimeout(
+          supabase.auth.getSession(),
+          timeoutMs,
+          'Session verification timed out.'
+        );
+        if (result?.data?.session) {
+          return result.data.session;
+        }
+        return null;
+      } catch (err) {
+        console.warn('getSession timed out or failed, checking cached session state:', err);
+        try {
+          const cfg = window.LUNARAY_SUPABASE_CONFIG;
+          const storageKey = `sb-${cfg?.projectId || 'ljirhafdpmeugilbsoiw'}-auth-token`;
+          const rawSession = localStorage.getItem(storageKey);
+          if (rawSession) {
+            const parsed = JSON.parse(rawSession);
+            const expiresAtMs = Number(parsed?.expires_at || 0) * 1000;
+            if (parsed?.access_token && (!expiresAtMs || expiresAtMs > Date.now())) {
+              return parsed;
+            }
+            // Clear expired session that failed to refresh so it cannot block future logins
+            localStorage.removeItem(storageKey);
+          }
+        } catch (_) {}
+        return activeAdminSession || null;
+      }
+    }
+
+    async function safeSignOutAdmin() {
+      try {
+        const cfg = window.LUNARAY_SUPABASE_CONFIG;
+        const storageKey = `sb-${cfg?.projectId || 'ljirhafdpmeugilbsoiw'}-auth-token`;
+        localStorage.removeItem(storageKey);
+      } catch (_) {}
+      try {
+        const supabase = getSupabaseAuthClient();
+        await withTimeout(supabase.auth.signOut(), 3000, 'Sign out timed out');
+      } catch (_) {}
+    }
 
     const PROJECT_TYPE_LABELS = {
       'short-form': 'Short-Form (Reels / TikTok / Shorts)',
@@ -554,14 +642,21 @@
 
       try {
         const supabase = getSupabaseAuthClient();
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email,
-          password
-        });
+        const { data, error } = await withTimeout(
+          supabase.auth.signInWithPassword({
+            email,
+            password
+          }),
+          12000,
+          'Sign-in request timed out while connecting to Supabase.'
+        );
 
         if (error) {
           if (/invalid login credentials/i.test(error.message || '')) {
             throw new Error('Authentication Failed: Invalid email or password. Please verify your credentials.');
+          }
+          if (isNetworkFetchError(error)) {
+            throw new Error('Network Error: Could not connect to the Supabase authentication server. Please check your internet connection and try again.');
           }
           throw error;
         }
@@ -570,7 +665,7 @@
           await verifyAndLoadAdminDashboard(data.session);
         }
       } catch (err) {
-        showAuthError(err?.message || 'Authentication Failed: Could not verify your credentials.');
+        showAuthError(formatAdminNetworkError(err, 'Authentication Failed: Could not verify your credentials.'));
       } finally {
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalBtnHtml;
@@ -603,12 +698,16 @@
       if (statusEl) statusEl.textContent = 'Saving...';
       try {
         const supabase = getSupabaseAuthClient();
-        const { error } = await supabase.auth.updateUser({ password: newPassword });
+        const { error } = await withTimeout(
+          supabase.auth.updateUser({ password: newPassword }),
+          10000,
+          'Password update request timed out.'
+        );
         if (error) throw error;
         if (pwInput) pwInput.value = '';
         if (statusEl) statusEl.textContent = '✓ Password saved! You can now use Email & Password sign-in.';
       } catch (err) {
-        if (statusEl) statusEl.textContent = 'Error: ' + (err?.message || 'Could not update password.');
+        if (statusEl) statusEl.textContent = 'Error: ' + formatAdminNetworkError(err, 'Could not update password.');
       } finally {
         if (btn) btn.disabled = false;
       }
@@ -616,8 +715,7 @@
 
     async function handleAdminSignOut() {
       try {
-        const supabase = getSupabaseAuthClient();
-        await supabase.auth.signOut();
+        await safeSignOutAdmin();
       } catch (err) {
         console.error('Sign out error:', err);
       } finally {
@@ -631,130 +729,170 @@
         return;
       }
 
-      activeAdminSession = session;
-      const loadingEl = document.getElementById('dashboard-loading');
-      const containerEl = document.getElementById('submissions-container');
-      const errorBox = document.getElementById('dashboard-error');
-      const errorText = document.getElementById('dashboard-error-text');
-      const refreshIcon = document.getElementById('refresh-icon');
-
-      if (errorBox) {
-        errorBox.classList.add('hidden');
-        errorBox.classList.remove('flex');
-      }
-      if (refreshIcon) refreshIcon.classList.add('animate-spin');
-
-      // Make sure dashboard shell is displayed and loading skeleton is visible
-      setAuthenticatedUiState(true, session.user?.email || 'Admin');
-      if (loadingEl) {
-        loadingEl.classList.remove('hidden');
-        loadingEl.classList.add('flex');
-      }
-      if (containerEl) {
-        containerEl.classList.add('hidden');
-        containerEl.classList.remove('flex');
+      if (activeDashboardLoadPromise) {
+        return activeDashboardLoadPromise;
       }
 
-      try {
-        let inquiries = null;
-        let adminEmail = session.user?.email || 'Admin';
+      activeDashboardLoadPromise = (async () => {
+        activeAdminSession = session;
+        const loadingEl = document.getElementById('dashboard-loading');
+        const containerEl = document.getElementById('submissions-container');
+        const errorBox = document.getElementById('dashboard-error');
+        const errorText = document.getElementById('dashboard-error-text');
+        const refreshIcon = document.getElementById('refresh-icon');
 
-        // Attempt 1: Fetch via Edge Function with an 8-second timeout
-        try {
-          const cfg = window.LUNARAY_SUPABASE_CONFIG;
-          const controller = new AbortController();
-          const timer = setTimeout(() => controller.abort(), 8000);
-
-          const res = await fetch(`${cfg.edgeFunctionUrl}?action=list-inquiries`, {
-            method: 'GET',
-            headers: {
-              'apikey': cfg.anonKey,
-              'Authorization': `Bearer ${session.access_token}`
-            },
-            signal: controller.signal
-          });
-          clearTimeout(timer);
-
-          if (res.status === 401 || res.status === 403) {
-            const payload = await res.json().catch(() => ({}));
-            const supabase = getSupabaseAuthClient();
-            await supabase.auth.signOut();
-            setAuthenticatedUiState(false);
-            showAuthError(
-              res.status === 403
-                ? `Administrator Authorization Denied (403): You authenticated as "${session.user?.email || 'this account'}", which is not an authorized administrator.`
-                : `Authentication Failed (401): ${payload.error || 'Your login session is invalid or expired. Please sign in again.'}`
-            );
-            return;
-          }
-
-          if (res.ok) {
-            const payload = await res.json().catch(() => ({}));
-            inquiries = payload.inquiries;
-            if (payload.admin_email) adminEmail = payload.admin_email;
-          }
-        } catch (edgeErr) {
-          console.warn('Edge function unavailable or timed out, querying database directly:', edgeErr);
+        if (errorBox) {
+          errorBox.classList.add('hidden');
+          errorBox.classList.remove('flex');
         }
+        if (refreshIcon) refreshIcon.classList.add('animate-spin');
 
-        // Attempt 2: Direct query via Supabase Client (protected by Postgres RLS is_admin())
-        if (!inquiries) {
-          const supabase = getSupabaseAuthClient();
-          const { data: dbRows, error: dbErr } = await supabase
-            .from('project_inquiries_by_date')
-            .select('*')
-            .order('created_at', { ascending: false })
-            .order('id', { ascending: false });
-
-          if (dbErr) {
-            if (dbErr.code === '42501' || /permission denied|security policy/i.test(dbErr.message || '')) {
-              await supabase.auth.signOut();
-              setAuthenticatedUiState(false);
-              showAuthError(`Administrator Authorization Denied: Account "${session.user?.email || 'this account'}" is not an authorized administrator.`);
-              return;
-            }
-            throw dbErr;
-          }
-          inquiries = dbRows;
-        }
-
-        allInquiries = sortSubmissionsNewestFirst(inquiries || []);
-        setAuthenticatedUiState(true, adminEmail);
-
+        // Make sure dashboard shell is displayed and loading skeleton is visible
+        setAuthenticatedUiState(true, session.user?.email || 'Admin');
         if (loadingEl) {
-          loadingEl.classList.add('hidden');
-          loadingEl.classList.remove('flex');
+          loadingEl.classList.remove('hidden');
+          loadingEl.classList.add('flex');
         }
         if (containerEl) {
-          containerEl.classList.remove('hidden');
-          containerEl.classList.add('flex');
+          containerEl.classList.add('hidden');
+          containerEl.classList.remove('flex');
         }
-        renderDashboard();
-      } catch (err) {
-        console.error('Failed to verify/load admin submissions:', err);
-        if (loadingEl) {
-          loadingEl.classList.add('hidden');
-          loadingEl.classList.remove('flex');
+
+        try {
+          let inquiries = null;
+          let adminEmail = session.user?.email || 'Admin';
+          const cfg = window.LUNARAY_SUPABASE_CONFIG;
+
+          // Attempt 1: Fetch via Edge Function with an 8-second timeout
+          try {
+            const res = await adminFetchWithTimeout(`${cfg.edgeFunctionUrl}?action=list-inquiries`, {
+              method: 'GET',
+              headers: {
+                'apikey': cfg.anonKey,
+                'Authorization': `Bearer ${session.access_token}`
+              }
+            }, 8000);
+
+            if (res.status === 401 || res.status === 403) {
+              const payload = await res.json().catch(() => ({}));
+              await safeSignOutAdmin();
+              setAuthenticatedUiState(false);
+              showAuthError(
+                res.status === 403
+                  ? `Administrator Authorization Denied (403): You authenticated as "${session.user?.email || 'this account'}", which is not an authorized administrator.`
+                  : `Authentication Failed (401): ${payload.error || 'Your login session is invalid or expired. Please sign in again.'}`
+              );
+              return;
+            }
+
+            if (res.ok) {
+              const payload = await res.json().catch(() => ({}));
+              if (Array.isArray(payload.inquiries)) {
+                inquiries = payload.inquiries;
+              }
+              if (payload.admin_email) adminEmail = payload.admin_email;
+            }
+          } catch (edgeErr) {
+            console.warn('Edge function unavailable or timed out, querying database directly:', edgeErr);
+          }
+
+          // Attempt 2: Direct bounded-timeout REST query to PostgREST (protected by Postgres RLS is_admin())
+          if (!inquiries) {
+            const restHeaders = {
+              'apikey': cfg.anonKey,
+              'Authorization': `Bearer ${session.access_token}`,
+              'Accept': 'application/json'
+            };
+
+            let dbRes = await adminFetchWithTimeout(
+              `${cfg.url}/rest/v1/project_inquiries_by_date?select=*&order=created_at.desc,id.desc`,
+              { method: 'GET', headers: restHeaders },
+              10000
+            );
+
+            // Fallback to base table if view is unavailable for any reason
+            if (dbRes.status === 404) {
+              dbRes = await adminFetchWithTimeout(
+                `${cfg.url}/rest/v1/project_inquiries?select=*&order=created_at.desc,id.desc`,
+                { method: 'GET', headers: restHeaders },
+                10000
+              );
+            }
+
+            if (dbRes.status === 401 || dbRes.status === 403) {
+              const errPayload = await dbRes.json().catch(() => ({}));
+              await safeSignOutAdmin();
+              setAuthenticatedUiState(false);
+              showAuthError(
+                dbRes.status === 403
+                  ? `Administrator Authorization Denied: Account "${session.user?.email || 'this account'}" is not an authorized administrator.`
+                  : `Authentication Failed: ${errPayload.message || 'Your login session has expired. Please sign in again.'}`
+              );
+              return;
+            }
+
+            if (!dbRes.ok) {
+              const errPayload = await dbRes.json().catch(() => ({}));
+              if (errPayload.code === '42501' || /permission denied|security policy/i.test(errPayload.message || '')) {
+                await safeSignOutAdmin();
+                setAuthenticatedUiState(false);
+                showAuthError(`Administrator Authorization Denied: Account "${session.user?.email || 'this account'}" is not an authorized administrator.`);
+                return;
+              }
+              throw new Error(errPayload.message || `Database query failed (HTTP ${dbRes.status})`);
+            }
+
+            const dbRows = await dbRes.json();
+            inquiries = Array.isArray(dbRows) ? dbRows : [];
+          }
+
+          allInquiries = sortSubmissionsNewestFirst(inquiries || []);
+          setAuthenticatedUiState(true, adminEmail);
+
+          if (loadingEl) {
+            loadingEl.classList.add('hidden');
+            loadingEl.classList.remove('flex');
+          }
+          if (containerEl) {
+            containerEl.classList.remove('hidden');
+            containerEl.classList.add('flex');
+          }
+          renderDashboard();
+        } catch (err) {
+          console.error('Failed to verify/load admin submissions:', err);
+          if (loadingEl) {
+            loadingEl.classList.add('hidden');
+            loadingEl.classList.remove('flex');
+          }
+          if (errorBox && errorText) {
+            errorText.textContent = 'Could not load project submissions (' + formatAdminNetworkError(err, 'network error') + '). Click Refresh Submissions to retry.';
+            errorBox.classList.remove('hidden');
+            errorBox.classList.add('flex');
+          }
+        } finally {
+          if (loadingEl) {
+            loadingEl.classList.add('hidden');
+            loadingEl.classList.remove('flex');
+          }
+          if (refreshIcon) refreshIcon.classList.remove('animate-spin');
         }
-        if (errorBox && errorText) {
-          errorText.textContent = 'Could not load project submissions (' + (err.message || 'network error') + '). Click Refresh Submissions to retry.';
-          errorBox.classList.remove('hidden');
-          errorBox.classList.add('flex');
-        }
+      })();
+
+      try {
+        return await activeDashboardLoadPromise;
       } finally {
-        if (refreshIcon) refreshIcon.classList.remove('animate-spin');
+        activeDashboardLoadPromise = null;
       }
     }
 
     async function loadSubmissions() {
       try {
-        const supabase = getSupabaseAuthClient();
-        const { data } = await supabase.auth.getSession();
-        if (!data?.session) {
+        const session = await getSafeAdminSession(5000);
+        if (!session) {
           setAuthenticatedUiState(false);
           return;
         }
-        await verifyAndLoadAdminDashboard(data.session);
+        await verifyAndLoadAdminDashboard(session);
       } catch (err) {
         console.error('Session check error:', err);
         setAuthenticatedUiState(false);
@@ -762,9 +900,7 @@
     }
 
     async function requestAdminSignedAssetUrls(rawUrl, disposition) {
-      const supabase = getSupabaseAuthClient();
-      const { data } = await supabase.auth.getSession();
-      const session = data?.session || activeAdminSession;
+      const session = (await getSafeAdminSession(5000)) || activeAdminSession;
       if (!session || !session.access_token) {
         throw new Error('Administrator session expired. Please sign in again.');
       }
@@ -783,7 +919,7 @@
       } catch (_) {}
 
       const cfg = window.LUNARAY_SUPABASE_CONFIG;
-      const res = await fetch(`${cfg.edgeFunctionUrl}?action=admin-download`, {
+      const res = await adminFetchWithTimeout(`${cfg.edgeFunctionUrl}?action=admin-download`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -798,7 +934,7 @@
           type: parsedType,
           disposition: disposition || 'attachment'
         })
-      });
+      }, 15000);
 
       const payload = await res.json().catch(() => ({}));
       const targetUrl = payload.signedDownloadUrl || payload.downloadUrl || payload.openUrl;
@@ -1561,20 +1697,23 @@
 
       try {
         const supabase = getSupabaseAuthClient();
-        const { data } = await supabase.auth.getSession();
-        if (data?.session) {
-          await verifyAndLoadAdminDashboard(data.session);
+        const session = await getSafeAdminSession(5000);
+        if (session) {
+          await verifyAndLoadAdminDashboard(session);
         } else {
           setAuthenticatedUiState(false);
         }
 
-        supabase.auth.onAuthStateChange((event, session) => {
-          if (event === 'SIGNED_OUT' || !session) {
+        supabase.auth.onAuthStateChange((event, nextSession) => {
+          if (event === 'SIGNED_OUT' || !nextSession) {
             if (!hadUrlError) {
               setAuthenticatedUiState(false);
             }
           } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-            verifyAndLoadAdminDashboard(session);
+            if (activeAdminSession?.access_token === nextSession.access_token && allInquiries.length > 0) {
+              return;
+            }
+            verifyAndLoadAdminDashboard(nextSession);
           }
         });
       } catch (err) {
