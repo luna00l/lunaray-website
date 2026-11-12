@@ -31,7 +31,7 @@
         <a href="privacy.html" class="font-body-sm text-body-sm text-primary font-semibold">Privacy Policy</a>
         <a href="refund-policy.html" class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors">Refund Policy</a>
         <a href="contact.html" class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors">Contact &amp; Support</a>
-        <a href="index.html#booking" class="px-4 py-2 rounded-xl bg-primary text-on-primary font-label-sm text-label-sm uppercase hover:bg-primary-container transition-all">Book a Slot</a>
+        <a href="mailto:lunaray.studi0000@gmail.com?subject=Book%20Your%20Edit%20%E2%80%94%20LunaRay%20Studio" class="px-4 py-2 rounded-xl bg-primary text-on-primary font-label-sm text-label-sm uppercase hover:bg-primary-container transition-all">Book Your Edit</a>
       </nav>
     </div>
   </header>
@@ -42,9 +42,9 @@
     <div class="p-4 sm:p-5 rounded-2xl bg-surface-container-low border border-primary/40 flex items-start gap-3">
       <span class="material-symbols-outlined text-primary text-[22px] shrink-0 mt-0.5">verified_user</span>
       <div class="flex flex-col gap-1">
-        <span class="font-label-sm text-label-sm text-primary uppercase tracking-wider">Owner Review Notice &bull; Verified Technical Disclosure</span>
+        <span class="font-label-sm text-label-sm text-primary uppercase tracking-wider">Privacy Overview &bull; Direct Email Communication</span>
         <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-          This Privacy Policy describes the actual technical implementation of this website and its Supabase backend. Items marked <span class="font-code-timecode text-secondary">[OWNER REVIEW REQUIRED]</span> highlight operational policies (such as manual retention timeframes) that you should confirm before final publication.
+          LunaRay Studio operates as a lightweight portfolio and video editing service website. We do not use website registration accounts, user tracking databases, or on-site file upload forms. All project enquiries and support communications take place directly via email.
         </p>
       </div>
     </div>
@@ -56,22 +56,16 @@
     </div>
 
     <div class="flex flex-col gap-6">
-      <!-- 1. Information Submitted Through Forms -->
+      <!-- 1. Information Shared Via Email -->
       <section class="p-6 rounded-2xl bg-surface-container-low flex flex-col gap-3">
-        <h2 class="font-headline-md text-headline-md text-on-surface">1. Information We Collect</h2>
+        <h2 class="font-headline-md text-headline-md text-on-surface">1. Information We Receive</h2>
         <p class="text-on-surface-variant leading-relaxed">
-          When you submit a project inquiry or support request through our website forms, we collect only the information you enter into the form fields:
+          When you click a contact, booking, custom edit, or support button on our website, your default email application opens a pre-addressed email to <span class="font-code-timecode text-primary">lunaray.studi0000@gmail.com</span>. We only receive the information you choose to send us by email, such as:
         </p>
         <ul class="list-disc list-inside text-on-surface-variant flex flex-col gap-1.5 pl-1">
-          <li><strong class="text-on-surface">Contact Details:</strong> Your Full Name, Email Address, and optional Creator / Brand Handle.</li>
-          <li><strong class="text-on-surface">Project Specifications:</strong> Project Type, Target Platform, Number of Videos, Estimated Target Duration, Budget Range, optional Reference Inspiration Links, and your Project Description / Creative Notes.</li>
-          <li><strong class="text-on-surface">Footage &amp; Asset Submissions (Optional):</strong>
-            <ul class="list-disc list-inside pl-5 mt-1 flex flex-col gap-1">
-              <li>If you use the direct file upload option (up to 500 MB), the video, audio, image, project, or archive files you select are uploaded to our backend storage bucket.</li>
-              <li>If you paste a Google Drive file or folder link (recommended for projects exceeding 500 MB), only the URL string you provide is saved with your inquiry record; our website does not automatically download or copy your Google Drive files into our database.</li>
-            </ul>
-          </li>
-          <li><strong class="text-on-surface">Submission Metadata:</strong> Confirmation that you accepted the project Terms (`terms_accepted`), the form section from which you initiated the inquiry (`source`), and the server-generated submission timestamp (`created_at`).</li>
+          <li><strong class="text-on-surface">Contact Details:</strong> Your Name, Email Address, and optional Creator / Brand Handle.</li>
+          <li><strong class="text-on-surface">Project Specifications:</strong> Package or Custom Edit preferences, target platform, estimated duration, reference links, and creative notes you include in your message.</li>
+          <li><strong class="text-on-surface">Footage &amp; Asset Links (Optional):</strong> Cloud storage links (such as Google Drive, Dropbox, or WeTransfer) that you share with us by email so we can access your raw footage and project assets.</li>
         </ul>
       </section>
 
@@ -79,7 +73,7 @@
       <section class="p-6 rounded-2xl bg-surface-container-low flex flex-col gap-3">
         <h2 class="font-headline-md text-headline-md text-on-surface">2. How We Use Your Information</h2>
         <p class="text-on-surface-variant leading-relaxed">
-          We use the information and files you submit solely to:
+          We use the information and footage links you email to us solely to:
         </p>
         <ul class="list-disc list-inside text-on-surface-variant flex flex-col gap-1.5 pl-1">
           <li>Review your project requirements and assess timeline availability.</li>
@@ -88,7 +82,7 @@
           <li>Respond to support, cancellation, refund, or privacy requests.</li>
         </ul>
         <p class="text-on-surface-variant leading-relaxed">
-          We do not use your project inquiries or uploaded footage for unrelated third-party advertising, and we do not sell your personal information.
+          We do not use your project enquiries or footage for unrelated third-party advertising, and we do not sell your personal information.
         </p>
       </section>
 
@@ -96,23 +90,22 @@
       <section class="p-6 rounded-2xl bg-surface-container-low flex flex-col gap-3">
         <h2 class="font-headline-md text-headline-md text-on-surface">3. Service Providers &amp; Infrastructure Used</h2>
         <p class="text-on-surface-variant leading-relaxed">
-          Based on our website's technical implementation, the following service providers process or host data when you use this website:
+          Based on our website's technical implementation, only the following standard services are involved when you browse the website or email us:
         </p>
         <ul class="list-disc list-inside text-on-surface-variant flex flex-col gap-2 pl-1">
-          <li><strong class="text-on-surface">Supabase (Database, Edge Functions &amp; Cloud Storage):</strong> Project inquiry records are stored in our Supabase PostgreSQL database (`public.project_inquiries`). Direct file uploads (up to 500 MB) are processed via our Supabase Edge Function (`upload-inquiry-asset`) and stored in a private Supabase Storage bucket (`project-assets`).</li>
-          <li><strong class="text-on-surface">Google Drive (When Used by Client):</strong> For footage shared via Google Drive links or shared directly with <span class="font-code-timecode text-primary">lunaray.studi0000@gmail.com</span>, file hosting and access permissions are governed by Google Drive and your Google account settings.</li>
           <li><strong class="text-on-surface">Email Provider (Gmail):</strong> Direct email communications sent to or from <span class="font-code-timecode text-primary">lunaray.studi0000@gmail.com</span> are processed through Google's email infrastructure.</li>
-          <li><strong class="text-on-surface">Frontend CDNs (Google Fonts &amp; Tailwind CSS CDN):</strong> Your browser loads fonts and stylesheet scripts from Google Fonts (`fonts.googleapis.com` / `fonts.gstatic.com`) and Tailwind CDN (`cdn.tailwindcss.com`), which receive standard HTTP request headers (such as your IP address and browser user-agent) when loading the page.</li>
+          <li><strong class="text-on-surface">Google Drive (When Used by Client):</strong> For footage shared via Google Drive links or shared directly with <span class="font-code-timecode text-primary">lunaray.studi0000@gmail.com</span>, file hosting and access permissions are governed by Google Drive and your Google account settings.</li>
+          <li><strong class="text-on-surface">Frontend Hosting &amp; CDNs (Vercel, Google Fonts &amp; Tailwind CSS CDN):</strong> Our static website is hosted on Vercel, and your browser loads fonts and stylesheet scripts from Google Fonts (`fonts.googleapis.com` / `fonts.gstatic.com`) and Tailwind CDN (`cdn.tailwindcss.com`), which receive standard HTTP request headers (such as your IP address and browser user-agent) when loading the page.</li>
         </ul>
       </section>
 
-      <!-- 4. How Uploaded Files & Information Are Protected, Retained & Deleted -->
+      <!-- 4. How Files & Information Are Protected, Retained & Deleted -->
       <section class="p-6 rounded-2xl bg-surface-container-low flex flex-col gap-3">
         <h2 class="font-headline-md text-headline-md text-on-surface">4. Data Protection, Retention &amp; Deletion</h2>
         <ul class="list-disc list-inside text-on-surface-variant flex flex-col gap-2 pl-1">
-          <li><strong class="text-on-surface">Access Controls:</strong> Our Supabase database (`public.project_inquiries`) has Row Level Security (RLS) enabled so anonymous website visitors can submit new inquiries (`INSERT`) but cannot list or read other clients' submissions (`SELECT`). Direct footage uploads are stored in a non-public Supabase Storage bucket (`project-assets`, `public = false`) where anonymous file listing is disabled, and downloads require a cryptographically signed URL generated by our backend Edge Function.</li>
-          <li><strong class="text-on-surface">Data Retention &amp; Deletion:</strong> Automatic scheduled deletion is <strong class="text-on-surface">not</strong> currently configured on our Supabase database or storage bucket. Submitted inquiry records and directly uploaded files remain stored in our Supabase project until they are manually reviewed and deleted by the studio owner or upon a verified client deletion request. <span class="font-code-timecode text-secondary">[OWNER REVIEW REQUIRED: Confirm how long you retain project inquiries and raw footage after a project finishes or if an inquiry does not proceed.]</span></li>
-          <li><strong class="text-on-surface">Google Drive Links:</strong> If you share footage via Google Drive, you remain in control of the link and can revoke sharing permissions in your Google Drive account at any time.</li>
+          <li><strong class="text-on-surface">Confidentiality:</strong> Raw footage, unreleased content, and project briefs shared with us via email are kept strictly confidential and used solely to complete your video editing project.</li>
+          <li><strong class="text-on-surface">Email &amp; Project File Retention:</strong> Email correspondence and downloaded working project files are retained only as needed to complete your project, provide revision support, or meet applicable invoicing and legal record-keeping obligations, and are deleted upon verified client request.</li>
+          <li><strong class="text-on-surface">Google Drive Links:</strong> If you share footage via Google Drive or another cloud provider, you remain in full control of the link and can revoke sharing permissions in your cloud account at any time.</li>
         </ul>
       </section>
 
@@ -123,9 +116,9 @@
           You may contact us at any time to request:
         </p>
         <ul class="list-disc list-inside text-on-surface-variant flex flex-col gap-1.5 pl-1">
-          <li>Access to a copy of the inquiry details we hold associated with your email address.</li>
+          <li>Access to details of the project correspondence we hold associated with your email address.</li>
           <li>Correction of inaccurate contact or project information.</li>
-          <li>Deletion of your project inquiry record and/or any raw footage files you uploaded to our Supabase Storage bucket, subject to any records we are required to retain for active projects, invoicing, tax, or dispute resolution under applicable law.</li>
+          <li>Deletion of your email enquiry history and/or any raw footage files held locally for your project, subject to any records we are required to retain for active projects, invoicing, tax, or dispute resolution under applicable law.</li>
         </ul>
       </section>
 
@@ -133,7 +126,7 @@
       <section class="p-6 rounded-2xl bg-surface-container-low flex flex-col gap-3">
         <h2 class="font-headline-md text-headline-md text-on-surface">6. Contact Us About Privacy</h2>
         <p class="text-on-surface-variant leading-relaxed">
-          To submit a privacy question or a data access, correction, or deletion request, please email us from the email address used on your submission or reach out via our Contact &amp; Support page:
+          To submit a privacy question or a data access, correction, or deletion request, please email us directly or reach out via our Contact &amp; Support page:
         </p>
         <div class="p-4 rounded-xl bg-surface-container-lowest border border-outline-variant/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div class="flex flex-col gap-1">
@@ -151,7 +144,7 @@
   <!-- Consistent Footer -->
   <footer class="w-full bg-surface-container-lowest border-t border-outline-variant/20 mt-12">
     <div class="max-w-7xl mx-auto px-6 lg:px-12 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <a aria-label="LunaRay Studio Administrator Login" class="flex items-center gap-2 no-underline text-inherit" href="admin.html">
+      <a aria-label="LunaRay Studio Home" class="flex items-center gap-2 no-underline text-inherit" href="index.html">
         <span class="font-headline-md text-body-md text-primary">LunaRay</span>
         <span class="px-2 py-0.5 rounded bg-surface-container-high text-secondary font-label-sm text-label-sm">STUDIO</span>
       </a>

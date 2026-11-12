@@ -31,7 +31,7 @@
         <a href="privacy.html" class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors">Privacy Policy</a>
         <a href="refund-policy.html" class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors">Refund Policy</a>
         <a href="contact.html" class="font-body-sm text-body-sm text-primary font-semibold">Contact &amp; Support</a>
-        <a href="index.html#booking" class="px-4 py-2 rounded-xl bg-primary text-on-primary font-label-sm text-label-sm uppercase hover:bg-primary-container transition-all">Book a Slot</a>
+        <a href="mailto:lunaray.studi0000@gmail.com?subject=Book%20Your%20Edit%20%E2%80%94%20LunaRay%20Studio" class="px-4 py-2 rounded-xl bg-primary text-on-primary font-label-sm text-label-sm uppercase hover:bg-primary-container transition-all">Book Your Edit</a>
       </nav>
     </div>
   </header>
@@ -42,7 +42,7 @@
       <span class="font-label-sm text-label-sm text-primary uppercase tracking-widest">CLIENT ASSISTANCE &amp; INQUIRIES</span>
       <h1 class="font-headline-lg text-headline-lg text-on-surface">CONTACT &amp; SUPPORT</h1>
       <p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
-        Reach out directly regarding new projects, existing submissions, quotations, payments, revisions, delivery updates, cancellations, refunds, or privacy requests.
+        Reach out directly via email regarding new projects, custom edits, quotations, payments, revisions, delivery updates, cancellations, refunds, or privacy requests.
       </p>
     </div>
 
@@ -62,7 +62,7 @@
           <p class="text-on-surface-variant font-body-sm text-body-sm leading-relaxed">
             All project quotations, payment arrangements, revision notes, and support inquiries are handled personally via email:
           </p>
-          <a href="mailto:lunaray.studi0000@gmail.com" class="px-4 py-3 rounded-xl bg-surface-container-lowest hover:bg-primary hover:text-on-primary text-primary font-code-timecode text-body-sm border border-primary/30 transition-all flex items-center justify-between gap-2">
+          <a href="mailto:lunaray.studi0000@gmail.com?subject=Project%20Enquiry%20%E2%80%94%20LunaRay%20Studio" class="px-4 py-3 rounded-xl bg-surface-container-lowest hover:bg-primary hover:text-on-primary text-primary font-code-timecode text-body-sm border border-primary/30 transition-all flex items-center justify-between gap-2">
             <span>lunaray.studi0000@gmail.com</span>
             <span class="material-symbols-outlined text-[18px]">send</span>
           </a>
@@ -73,7 +73,7 @@
           <ul class="flex flex-col gap-2.5 text-on-surface-variant font-body-sm text-body-sm">
             <li class="flex items-start gap-2.5">
               <span class="material-symbols-outlined text-primary text-[18px] shrink-0">movie_edit</span>
-              <span><strong class="text-on-surface">New Projects &amp; Existing Submissions:</strong> Check slot availability or update an existing inquiry.</span>
+              <span><strong class="text-on-surface">New Projects &amp; Custom Edits:</strong> Check slot availability or request a tailored quote.</span>
             </li>
             <li class="flex items-start gap-2.5">
               <span class="material-symbols-outlined text-secondary text-[18px] shrink-0">payments</span>
@@ -89,87 +89,83 @@
             </li>
             <li class="flex items-start gap-2.5">
               <span class="material-symbols-outlined text-secondary text-[18px] shrink-0">shield_lock</span>
-              <span><strong class="text-on-surface">Privacy Requests:</strong> Request access to, correction of, or deletion of your inquiry data or uploaded footage under our <a href="privacy.html" class="text-primary hover:underline">Privacy Policy</a>.</span>
+              <span><strong class="text-on-surface">Privacy Requests:</strong> Request access to, correction of, or deletion of your inquiry emails under our <a href="privacy.html" class="text-primary hover:underline">Privacy Policy</a>.</span>
             </li>
           </ul>
         </div>
       </div>
 
-      <!-- Right Column: Support & Inquiry Form (Reusing Existing Supabase Integration) -->
-      <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl bg-surface-container-low shadow-2xl border border-outline-variant/30">
-        <div class="hidden flex-col items-center text-center py-12 gap-4" id="support-success-state">
-          <div class="w-16 h-16 rounded-full bg-primary/20 text-primary flex items-center justify-center">
-            <span class="material-symbols-outlined text-[34px]">check_circle</span>
-          </div>
-          <h3 class="font-headline-lg text-headline-lg-mobile text-on-surface">MESSAGE RECEIVED.</h3>
-          <p class="text-on-surface-variant font-body-md text-body-md max-w-md">
-            Your support message has been saved and logged for review. We will reply to your email address as soon as possible.
+      <!-- Right Column: Email-Based Contact & Support Options -->
+      <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl bg-surface-container-low shadow-2xl border border-outline-variant/30 flex flex-col gap-6">
+        <div class="flex flex-col gap-1">
+          <span class="font-label-sm text-label-sm text-primary uppercase">Direct Email Channels</span>
+          <h2 class="font-headline-md text-headline-md text-on-surface">Choose Your Enquiry Type</h2>
+          <p class="font-body-sm text-body-sm text-on-surface-variant pt-1">
+            Select an option below to open your email application with our studio address (<span class="font-code-timecode text-primary">lunaray.studi0000@gmail.com</span>) and subject line prefilled.
           </p>
-          <button type="button" onclick="resetSupportForm()" class="px-5 py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface font-body-sm text-body-sm transition-all">
-            Send Another Message
-          </button>
         </div>
 
-        <form id="support-contact-form" class="flex flex-col gap-5" novalidate="novalidate" onsubmit="handleSupportSubmit(event)">
-          <div class="flex flex-col gap-1">
-            <span class="font-label-sm text-label-sm text-primary uppercase">Support &amp; Inquiry Form</span>
-            <h2 class="font-headline-md text-headline-md text-on-surface">Send a Direct Message</h2>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="p-5 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 flex flex-col justify-between gap-4">
             <div class="flex flex-col gap-1.5">
-              <label for="support-name" class="font-label-sm text-label-sm text-on-surface-variant uppercase">Full Name *</label>
-              <input id="support-name" type="text" required class="w-full px-4 py-3 rounded-xl bg-surface-container-lowest text-on-surface placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary font-body-md text-body-md" placeholder="Your full name"/>
-              <p id="err-support-name" class="hidden text-error font-body-sm text-xs items-center gap-1 pt-0.5" role="alert"></p>
+              <span class="font-label-sm text-label-sm text-primary uppercase">Project Packages</span>
+              <h3 class="font-headline-md text-body-lg text-on-surface">Book Your Edit</h3>
+              <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                Book Basic ($5), Standard ($10), or Premium ($20) video editing packages and share your footage link.
+              </p>
             </div>
+            <a href="mailto:lunaray.studi0000@gmail.com?subject=Book%20Your%20Edit%20%E2%80%94%20LunaRay%20Studio" class="w-full py-3 px-4 rounded-xl bg-primary text-on-primary font-headline-md text-body-sm hover:bg-primary-container hover:text-on-primary-container transition-all flex items-center justify-center gap-2">
+              <span>BOOK YOUR EDIT</span>
+              <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+            </a>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 flex flex-col justify-between gap-4">
             <div class="flex flex-col gap-1.5">
-              <label for="support-email" class="font-label-sm text-label-sm text-on-surface-variant uppercase">Email Address *</label>
-              <input id="support-email" type="email" required class="w-full px-4 py-3 rounded-xl bg-surface-container-lowest text-on-surface placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary font-body-md text-body-md" placeholder="you@example.com"/>
-              <p id="err-support-email" class="hidden text-error font-body-sm text-xs items-center gap-1 pt-0.5" role="alert"></p>
+              <span class="font-label-sm text-label-sm text-secondary uppercase">Tailored Production</span>
+              <h3 class="font-headline-md text-body-lg text-on-surface">Custom Edits</h3>
+              <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                Request custom video editing scopes, channel retainers, AMVs, or multi-platform bundles.
+              </p>
             </div>
+            <a href="mailto:lunaray.studi0000@gmail.com?subject=Custom%20Edit%20Request%20%E2%80%94%20LunaRay%20Studio" class="w-full py-3 px-4 rounded-xl bg-surface-container-high hover:bg-secondary hover:text-on-secondary text-on-surface font-headline-md text-body-sm transition-all flex items-center justify-center gap-2">
+              <span>CUSTOM EDITS</span>
+              <span class="material-symbols-outlined text-[18px]">auto_awesome</span>
+            </a>
           </div>
 
-          <div class="flex flex-col gap-1.5">
-            <label for="support-topic" class="font-label-sm text-label-sm text-on-surface-variant uppercase">Inquiry Topic *</label>
-            <select id="support-topic" required class="w-full px-4 py-3 rounded-xl bg-surface-container-lowest text-on-surface focus:outline-none focus:ring-1 focus:ring-primary font-body-md text-body-md">
-              <option value="New Project / Existing Submission">New Project / Existing Submission</option>
-              <option value="Quotation &amp; Payment Inquiry">Quotation &amp; Payment Inquiry</option>
-              <option value="Revisions &amp; Delivery Update">Revisions &amp; Delivery Update</option>
-              <option value="Refund or Cancellation Request">Refund or Cancellation Request</option>
-              <option value="Privacy Request (Access / Correction / Deletion)">Privacy Request (Access / Correction / Deletion)</option>
-              <option value="Other Question or Concern">Other Question or Concern</option>
-            </select>
-          </div>
-
-          <div class="flex flex-col gap-1.5">
-            <label for="support-message" class="font-label-sm text-label-sm text-on-surface-variant uppercase">Message &amp; Details *</label>
-            <textarea id="support-message" rows="4" required class="w-full px-4 py-3 rounded-xl bg-surface-container-lowest text-on-surface placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary font-body-md text-body-md resize-none" placeholder="Include your project details, quotation reference, or specific question..."></textarea>
-            <p id="err-support-message" class="hidden text-error font-body-sm text-xs items-center gap-1 pt-0.5" role="alert"></p>
-          </div>
-
-          <!-- Unchecked Terms Consent Checkbox -->
-          <div class="flex flex-col gap-1">
-            <div class="flex items-start gap-3">
-              <input id="support-terms" type="checkbox" required class="mt-1 w-4 h-4 rounded text-primary bg-surface-container-lowest border-surface-container-high focus:ring-primary"/>
-              <label for="support-terms" class="font-body-sm text-body-sm text-on-surface-variant cursor-pointer">
-                I agree to the <a href="terms.html" class="text-primary hover:underline">Terms &amp; Conditions</a> and acknowledge the <a href="privacy.html" class="text-primary hover:underline">Privacy Policy</a>. *
-              </label>
+          <div class="p-5 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 flex flex-col justify-between gap-4">
+            <div class="flex flex-col gap-1.5">
+              <span class="font-label-sm text-label-sm text-primary uppercase">General Enquiries</span>
+              <h3 class="font-headline-md text-body-lg text-on-surface">Contact</h3>
+              <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                Ask about current schedule availability, creative collaborations, or general studio questions.
+              </p>
             </div>
-            <p id="err-support-terms" class="hidden text-error font-body-sm text-xs items-center gap-1 pt-0.5" role="alert"></p>
+            <a href="mailto:lunaray.studi0000@gmail.com?subject=Project%20Enquiry%20%E2%80%94%20LunaRay%20Studio" class="w-full py-3 px-4 rounded-xl bg-surface-container-high hover:bg-primary hover:text-on-primary text-on-surface font-headline-md text-body-sm transition-all flex items-center justify-center gap-2">
+              <span>CONTACT</span>
+              <span class="material-symbols-outlined text-[18px]">mail</span>
+            </a>
           </div>
 
-          <!-- Short Privacy Notice -->
-          <p class="font-body-sm text-[11px] text-outline leading-relaxed bg-surface-container-lowest/70 p-3 rounded-xl border border-outline-variant/20">
-            Privacy Notice: Information submitted through this form is saved in our Supabase backend solely to respond to your inquiry or support request. See our <a href="privacy.html" class="text-primary hover:underline">Privacy Policy</a>.
-          </p>
+          <div class="p-5 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 flex flex-col justify-between gap-4">
+            <div class="flex flex-col gap-1.5">
+              <span class="font-label-sm text-label-sm text-secondary uppercase">Client Assistance</span>
+              <h3 class="font-headline-md text-body-lg text-on-surface">Support</h3>
+              <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                Get help with existing projects, revision notes, delivery timelines, invoices, or refund requests.
+              </p>
+            </div>
+            <a href="mailto:lunaray.studi0000@gmail.com?subject=Client%20Support%20Request%20%E2%80%94%20LunaRay%20Studio" class="w-full py-3 px-4 rounded-xl bg-surface-container-high hover:bg-secondary hover:text-on-secondary text-on-surface font-headline-md text-body-sm transition-all flex items-center justify-center gap-2">
+              <span>SUPPORT</span>
+              <span class="material-symbols-outlined text-[18px]">support_agent</span>
+            </a>
+          </div>
+        </div>
 
-          <div id="support-error-box" class="hidden p-3.5 rounded-xl bg-error-container/30 border border-error/40 text-error font-body-sm text-body-sm"></div>
-
-          <button id="support-submit-btn" type="submit" class="w-full py-3.5 rounded-xl bg-primary text-on-primary font-headline-md text-body-md hover:bg-primary-container hover:text-on-primary-container transition-all flex items-center justify-center gap-2">
-            <span>SEND SUPPORT MESSAGE</span>
-            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-          </button>
-        </form>
+        <p class="font-body-sm text-[11px] text-outline leading-relaxed bg-surface-container-lowest/70 p-3.5 rounded-xl border border-outline-variant/20">
+          By contacting us via email, you acknowledge our <a href="terms.html" class="text-primary hover:underline">Terms &amp; Conditions</a>, <a href="privacy.html" class="text-primary hover:underline">Privacy Policy</a>, and <a href="refund-policy.html" class="text-primary hover:underline">Refund Policy</a>.
+        </p>
       </div>
     </div>
   </main>
@@ -177,7 +173,7 @@
   <!-- Consistent Footer -->
   <footer class="w-full bg-surface-container-lowest border-t border-outline-variant/20 mt-12">
     <div class="max-w-7xl mx-auto px-6 lg:px-12 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <a aria-label="LunaRay Studio Administrator Login" class="flex items-center gap-2 no-underline text-inherit" href="admin.html">
+      <a aria-label="LunaRay Studio Home" class="flex items-center gap-2 no-underline text-inherit" href="index.html">
         <span class="font-headline-md text-body-md text-primary">LunaRay</span>
         <span class="px-2 py-0.5 rounded bg-surface-container-high text-secondary font-label-sm text-label-sm">STUDIO</span>
       </a>
@@ -190,113 +186,5 @@
       </div>
     </div>
   </footer>
-
-  <script src="supabase-client.js?v=validated"></script>
-  <script>
-    let isSubmittingSupport = false;
-
-    function setSupportErr(id, msg) {
-      const el = document.getElementById(id);
-      if (!el) return;
-      if (!msg) {
-        el.textContent = '';
-        el.classList.add('hidden');
-        el.classList.remove('flex');
-      } else {
-        el.textContent = msg;
-        el.classList.remove('hidden');
-        el.classList.add('flex');
-      }
-    }
-
-    async function handleSupportSubmit(e) {
-      e.preventDefault();
-      if (isSubmittingSupport) return;
-
-      const name = (document.getElementById('support-name')?.value || '').trim();
-      const email = (document.getElementById('support-email')?.value || '').trim();
-      const topic = (document.getElementById('support-topic')?.value || '').trim();
-      const message = (document.getElementById('support-message')?.value || '').trim();
-      const terms = Boolean(document.getElementById('support-terms')?.checked);
-      const errBox = document.getElementById('support-error-box');
-      const btn = document.getElementById('support-submit-btn');
-
-      if (errBox) errBox.classList.add('hidden');
-
-      let valid = true;
-      if (!name) {
-        setSupportErr('err-support-name', 'Please enter your full name.');
-        valid = false;
-      } else {
-        setSupportErr('err-support-name', '');
-      }
-
-      if (!email) {
-        setSupportErr('err-support-email', 'Please enter your email address.');
-        valid = false;
-      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
-        setSupportErr('err-support-email', 'Please enter a valid email address.');
-        valid = false;
-      } else {
-        setSupportErr('err-support-email', '');
-      }
-
-      if (!message) {
-        setSupportErr('err-support-message', 'Please enter your message or support details.');
-        valid = false;
-      } else {
-        setSupportErr('err-support-message', '');
-      }
-
-      if (!terms) {
-        setSupportErr('err-support-terms', 'Please agree to the Terms & Conditions.');
-        valid = false;
-      } else {
-        setSupportErr('err-support-terms', '');
-      }
-
-      if (!valid) return;
-
-      isSubmittingSupport = true;
-      const origHtml = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = '<span>SENDING...</span>';
-
-      try {
-        await window.submitSupportEnquiryToSupabase({
-          full_name: name,
-          email: email,
-          support_topic: topic,
-          support_message: message,
-          terms_accepted: true,
-          record_type: 'support_enquiry',
-          source: 'contact_support_page'
-        });
-
-        document.getElementById('support-contact-form').classList.add('hidden');
-        const success = document.getElementById('support-success-state');
-        success.classList.remove('hidden');
-        success.classList.add('flex');
-      } catch (err) {
-        if (errBox) {
-          errBox.textContent = 'Could not send message (' + (err.message || 'network error') + '). Please email lunaray.studi0000@gmail.com directly.';
-          errBox.classList.remove('hidden');
-        }
-      } finally {
-        isSubmittingSupport = false;
-        btn.disabled = false;
-        btn.innerHTML = origHtml;
-      }
-    }
-
-    function resetSupportForm() {
-      const form = document.getElementById('support-contact-form');
-      const success = document.getElementById('support-success-state');
-      form.reset();
-      success.classList.add('hidden');
-      success.classList.remove('flex');
-      form.classList.remove('hidden');
-    }
-  </script>
 </body>
 </html>
