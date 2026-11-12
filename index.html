@@ -29,7 +29,7 @@
   <script id="tailwind-config">
     tailwind.config={darkMode:"class",theme:{extend:{colors:{"tertiary-fixed":"#e7defd","error-container":"#93000a","on-tertiary":"#322d45","on-primary-fixed-variant":"#483b87","on-secondary-container":"#dba6bd","inverse-surface":"#e4e1ed","outline-variant":"#484550","on-error":"#690005","primary-container":"#a99bef","surface-container":"#1f1f27","on-surface":"#e4e1ed","surface-container-lowest":"#0d0d15","on-surface-variant":"#c9c4d2","surface-container-highest":"#34343d","inverse-primary":"#6053a1","tertiary":"#cbc2e0","on-tertiary-fixed-variant":"#49435c","surface-tint":"#cabeff","on-secondary-fixed-variant":"#633a4d","surface-variant":"#34343d","secondary-container":"#633a4d","tertiary-container":"#aaa2bf","outline":"#938f9c","primary":"#cabeff","secondary-fixed":"#ffd8e7","on-primary-container":"#3d2f7b","background":"#13131b","primary-fixed-dim":"#cabeff","on-primary":"#31226f","on-secondary-fixed":"#311021","surface-container-high":"#292932","secondary-fixed-dim":"#eeb7ce","secondary":"#eeb7ce","primary-fixed":"#e6deff","surface-bright":"#393841","surface-dim":"#13131b","on-error-container":"#ffdad6","inverse-on-surface":"#303038","on-primary-fixed":"#1c065b","tertiary-fixed-dim":"#cbc2e0","on-background":"#e4e1ed","on-tertiary-fixed":"#1d182f","surface":"#13131b","error":"#ffb4ab","on-secondary":"#492437","on-tertiary-container":"#3e3850","surface-container-low":"#1b1b23"},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"space-md":"0.75rem","space-xl":"2rem","space-sm":"0.5rem","space-lg":"1.25rem","gutter":"0.75rem","space-xs":"0.25rem","margin":"1rem"},fontFamily:{"display-lg-mobile":["Space Grotesk"],"body-lg":["Plus Jakarta Sans"],"display-lg":["Space Grotesk"],"body-sm":["Plus Jakarta Sans"],"body-md":["Plus Jakarta Sans"],"code-timecode":["JetBrains Mono"],"headline-lg":["Space Grotesk"],"headline-lg-mobile":["Space Grotesk"],"label-sm":["JetBrains Mono"],"headline-md":["Space Grotesk"]},fontSize:{"display-lg-mobile":["32px",{"lineHeight":"40px","fontWeight":"700"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"display-lg":["48px",{"lineHeight":"56px","fontWeight":"700"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"code-timecode":["14px",{"lineHeight":"18px","letterSpacing":"0.05em","fontWeight":"600"}],"headline-lg":["32px",{"lineHeight":"40px","fontWeight":"600"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","fontWeight":"600"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"500"}],"headline-md":["22px",{"lineHeight":"28px","fontWeight":"600"}]}}}}
   </script>
-  <link rel="stylesheet" href="styles.css?v=explore">
+  <link rel="stylesheet" href="styles.css?v=nav">
 </head>
 <body class="is-loading bg-surface text-on-surface font-body-md text-body-md antialiased selection:bg-primary-container selection:text-on-primary-container">
 
@@ -64,6 +64,24 @@
 
       <!-- Essential Controls -->
       <div class="header-actions">
+        <!-- Contact Navigation Button -->
+        <a href="#contact" class="icon-btn" title="Contact">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+          </svg>
+          <span class="btn-text">Contact</span>
+        </a>
+
+        <!-- Support Navigation Button -->
+        <a href="contact.html" class="icon-btn" title="Support">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+            <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
+          </svg>
+          <span class="btn-text">Support</span>
+        </a>
+
         <!-- Ambient Lofi Synth Toggle -->
         <button id="audioToggle" class="icon-btn" title="Toggle Ambience">
           <svg class="icon audio-off-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

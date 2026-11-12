@@ -216,6 +216,7 @@ body.is-loading {
   font-family: var(--font-sans);
   font-size: 12px;
   font-weight: 500;
+  text-decoration: none;
   transition: all 0.2s ease;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
@@ -245,6 +246,44 @@ body.is-loading {
 }
 .icon-btn.active .audio-on-icon {
   display: inline-block;
+}
+
+@media (max-width: 640px) {
+  .site-header {
+    padding: 12px 10px;
+  }
+
+  .header-inner {
+    gap: 6px;
+  }
+
+  .brand-badge {
+    padding: 6px 10px;
+    gap: 6px;
+  }
+
+  .brand-title {
+    font-size: 13px;
+  }
+
+  .header-actions {
+    gap: 5px;
+  }
+
+  .icon-btn {
+    padding: 6px 10px;
+    font-size: 11px;
+    gap: 5px;
+  }
+
+  .icon-btn .icon {
+    width: 13px;
+    height: 13px;
+  }
+
+  #audioToggle .btn-text {
+    display: none;
+  }
 }
 
 /* ==========================================================================
